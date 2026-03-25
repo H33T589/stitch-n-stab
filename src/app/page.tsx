@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 
 export const dynamic = "force-dynamic";
 
@@ -10,25 +12,20 @@ export default async function HomePage() {
   });
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      {/* Header */}
-      <header className="bg-white border-b border-zinc-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">
-            Stitch-n-Stab
-          </h1>
-          <p className="text-zinc-500 text-sm mt-1">
-            Handmade crochet with love
-          </p>
-        </div>
-      </header>
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader />
 
-      {/* Catalog */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-10">
         {products.length === 0 ? (
-          <p className="text-zinc-500 text-center py-20 text-lg">
-            New products coming soon — check back later!
-          </p>
+          <div className="rounded-2xl border border-dashed border-line bg-paper/60 px-6 py-16 text-center">
+            <p className="font-display text-xl text-ink sm:text-2xl">
+              New pieces coming soon
+            </p>
+            <p className="text-muted mt-2 max-w-md mx-auto text-base">
+              Check back later for freshly stitched crochet — or follow along
+              on social if we&apos;ve linked it below.
+            </p>
+          </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {products.map((product) => {
@@ -37,18 +34,17 @@ export default async function HomePage() {
                 <Link
                   key={product.id}
                   href={`/products/${product.id}`}
-                  className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                  className="group rounded-2xl border border-line bg-paper shadow-sm overflow-hidden ring-1 ring-black/[0.03] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:ring-accent/15 hover:border-accent-soft"
                 >
-                  {/* Image */}
-                  <div className="aspect-square bg-zinc-100 overflow-hidden">
+                  <div className="aspect-square bg-[#ebe4db] overflow-hidden">
                     {images[0] ? (
                       <img
                         src={images[0]}
                         alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                      <div className="w-full h-full flex items-center justify-center text-muted/40">
                         <svg
                           className="w-12 h-12"
                           fill="none"
@@ -66,19 +62,18 @@ export default async function HomePage() {
                     )}
                   </div>
 
-                  {/* Info */}
                   <div className="p-3 sm:p-4">
-                    <h2 className="font-medium text-zinc-900 truncate">
+                    <h2 className="font-medium text-ink leading-snug line-clamp-2 group-hover:text-accent transition-colors">
                       {product.title}
                     </h2>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center gap-2 mt-2 flex-wrap">
                       {product.price != null && (
-                        <span className="text-zinc-600 text-sm">
+                        <span className="text-accent font-semibold text-sm sm:text-base">
                           ${product.price.toFixed(2)}
                         </span>
                       )}
                       {product.sold && (
-                        <span className="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-medium">
+                        <span className="bg-accent-soft text-accent px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wide">
                           Sold
                         </span>
                       )}
@@ -91,12 +86,7 @@ export default async function HomePage() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-zinc-200 mt-12">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-center text-sm text-zinc-500">
-          <p>&copy; {new Date().getFullYear()} Stitch-n-Stab. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

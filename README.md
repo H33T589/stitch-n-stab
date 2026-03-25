@@ -40,6 +40,12 @@ Copy `.env.example` to `.env` and fill in:
 | `ADMIN_PASSWORD` | Admin login password                |
 | `JWT_SECRET`     | Secret key for signing auth tokens  |
 
+Optional (public footer link — safe to commit the name of this variable; put the real URL only in `.env`):
+
+| Variable                    | Description                                      |
+| --------------------------- | ------------------------------------------------ |
+| `NEXT_PUBLIC_INSTAGRAM_URL` | Full profile URL, e.g. `https://instagram.com/yourhandle` |
+
 ## Features
 
 - **Public catalog** — responsive product grid with detail pages

@@ -7,17 +7,20 @@ export default function AdminLoginPage() {
   const [state, formAction, isPending] = useActionState(login, null);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-50">
+    <div className="min-h-screen flex items-center justify-center bg-canvas px-4">
       <form
         action={formAction}
-        className="bg-white p-8 rounded-2xl shadow-md w-full max-w-sm space-y-6"
+        className="bg-paper border border-line rounded-2xl shadow-sm w-full max-w-sm space-y-6 p-8 ring-1 ring-black/[0.04]"
       >
-        <h1 className="text-2xl font-bold text-center text-zinc-900">
-          Admin Login
-        </h1>
+        <div className="text-center">
+          <p className="font-display text-xl font-semibold text-ink">
+            Stitch-n-Stab
+          </p>
+          <h1 className="text-lg font-semibold text-muted mt-2">Admin sign in</h1>
+        </div>
 
         {state?.error && (
-          <p className="text-red-600 text-center text-sm bg-red-50 rounded-lg p-3">
+          <p className="text-red-700 text-center text-sm bg-red-50 border border-red-100 rounded-xl p-3">
             {state.error}
           </p>
         )}
@@ -25,7 +28,7 @@ export default function AdminLoginPage() {
         <div>
           <label
             htmlFor="username"
-            className="block text-sm font-medium text-zinc-700 mb-1"
+            className="block text-sm font-medium text-ink mb-1.5"
           >
             Username
           </label>
@@ -35,14 +38,14 @@ export default function AdminLoginPage() {
             type="text"
             required
             autoComplete="username"
-            className="w-full px-4 py-3 border border-zinc-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-zinc-900"
+            className="w-full px-4 py-3.5 border border-line rounded-xl text-lg bg-paper text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
         <div>
           <label
             htmlFor="password"
-            className="block text-sm font-medium text-zinc-700 mb-1"
+            className="block text-sm font-medium text-ink mb-1.5"
           >
             Password
           </label>
@@ -52,16 +55,16 @@ export default function AdminLoginPage() {
             type="password"
             required
             autoComplete="current-password"
-            className="w-full px-4 py-3 border border-zinc-300 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-zinc-900"
+            className="w-full px-4 py-3.5 border border-line rounded-xl text-lg bg-paper text-ink placeholder:text-muted/50 focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
           />
         </div>
 
         <button
           type="submit"
           disabled={isPending}
-          className="w-full py-3 bg-zinc-900 text-white text-lg font-medium rounded-lg hover:bg-zinc-800 disabled:opacity-50 transition-colors cursor-pointer"
+          className="w-full py-3.5 bg-accent text-white text-lg font-semibold rounded-xl hover:bg-accent-hover disabled:opacity-50 transition-colors cursor-pointer shadow-sm"
         >
-          {isPending ? "Signing in..." : "Sign In"}
+          {isPending ? "Signing in..." : "Sign in"}
         </button>
       </form>
     </div>

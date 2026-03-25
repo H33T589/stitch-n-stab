@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { SiteFooter } from "@/components/site-footer";
+import { SiteHeader } from "@/components/site-header";
 
 export default async function ProductPage({
   params,
@@ -18,31 +20,20 @@ export default async function ProductPage({
   const images: string[] = JSON.parse(product.imageUrls);
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      {/* Header */}
-      <header className="bg-white border-b border-zinc-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
-          <Link
-            href="/"
-            className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight hover:text-zinc-700 transition-colors"
-          >
-            Stitch-n-Stab
-          </Link>
-        </div>
-      </header>
+    <div className="flex min-h-screen flex-col">
+      <SiteHeader linkWholeTitle />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8">
         <Link
           href="/"
-          className="text-zinc-500 hover:text-zinc-800 text-sm mb-6 inline-block"
+          className="text-muted hover:text-accent text-sm font-medium mb-6 inline-flex items-center gap-1 transition-colors"
         >
-          &larr; Back to all products
+          <span aria-hidden>&larr;</span> All products
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <div className="rounded-2xl border border-line bg-paper shadow-sm overflow-hidden ring-1 ring-black/[0.04]">
           <div className="grid md:grid-cols-2 gap-0">
-            {/* Images */}
-            <div className="bg-zinc-100">
+            <div className="bg-[#ebe4db] min-h-[200px]">
               {images.length > 0 ? (
                 <div>
                   <img
@@ -56,15 +47,15 @@ export default async function ProductPage({
                         <img
                           key={i}
                           src={src}
-                          alt={`${product.title} ${i + 1}`}
-                          className="w-20 h-20 object-cover rounded-lg border-2 border-transparent hover:border-zinc-400 transition-colors flex-shrink-0"
+                          alt={`${product.title} — image ${i + 1}`}
+                          className="w-20 h-20 object-cover rounded-lg border-2 border-paper shadow-sm flex-shrink-0"
                         />
                       ))}
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="aspect-square flex items-center justify-center text-zinc-300">
+                <div className="aspect-square flex items-center justify-center text-muted/40">
                   <svg
                     className="w-20 h-20"
                     fill="none"
@@ -82,37 +73,39 @@ export default async function ProductPage({
               )}
             </div>
 
-            {/* Details */}
             <div className="p-6 sm:p-8 flex flex-col">
-              <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
+              <h1 className="font-display text-2xl sm:text-3xl font-semibold text-ink leading-tight">
                 {product.title}
               </h1>
 
               {product.price != null && (
-                <p className="text-xl text-zinc-700 mt-2">
+                <p className="text-2xl font-semibold text-accent mt-3">
                   ${product.price.toFixed(2)}
                 </p>
               )}
 
               {product.sold && (
-                <span className="inline-block mt-3 bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium w-fit">
+                <span className="inline-block mt-4 bg-accent-soft text-accent px-3 py-1.5 rounded-full text-sm font-semibold uppercase tracking-wide w-fit">
                   Sold
                 </span>
               )}
 
               {product.description && (
-                <p className="text-zinc-600 mt-6 leading-relaxed whitespace-pre-wrap">
+                <p className="text-muted mt-6 leading-relaxed whitespace-pre-wrap text-base">
                   {product.description}
                 </p>
               )}
 
-              <div className="mt-auto pt-8 text-sm text-zinc-500">
-                Interested? Reach out on social media or send a message!
+              <div className="mt-auto pt-8 text-sm text-muted border-t border-line/80 mt-8 pt-6">
+                Interested? Reach out the same way you usually do — this page
+                is just an easier way to browse what&apos;s available.
               </div>
             </div>
           </div>
         </div>
       </main>
+
+      <SiteFooter />
     </div>
   );
 }
