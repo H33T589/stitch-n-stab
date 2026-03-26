@@ -4,14 +4,108 @@ import { createProduct } from "@/server/actions";
 import { useState } from "react";
 import Link from "next/link";
 
+function resizeImage(
+  file: File,
+  maxDim = 1600,
+  quality = 0.82
+): Promise<File> {
+  return new Promise((resolve) => {
+    if (!file.type.startsWith("image/")) {
+      resolve(file);
+      return;
+    }
+
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+
+      let { width, height } = img;
+
+      if (width <= maxDim && height <= maxDim && file.size <= 1_048_576) {
+        resolve(file);
+        return;
+      }
+
+      const scale = Math.min(maxDim / width, maxDim / height, 1);
+      width = Math.round(width * scale);
+      height = Math.round(height * scale);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            resolve(file);
+            return;
+          }
+          resolve(
+            new File([blob], file.name.replace(/\.[^.]+$/, ".jpg"), {
+              type: "image/jpeg",
+            })
+          );
+        },
+        "image/jpeg",
+        quality
+      );
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(file);
+    };
+
+    img.src = url;
+  });
+}
+
 export default function NewProductPage() {
   const [previews, setPreviews] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
     if (!files) return;
-    setPreviews(Array.from(files).map((f) => URL.createObjectURL(f)));
+    const list = Array.from(files);
+    setSelectedFiles(list);
+    setPreviews(list.map((f) => URL.createObjectURL(f)));
+    setError(null);
+  }
+
+  async function handleSubmit(formData: FormData) {
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const resized = new FormData();
+      resized.set("title", formData.get("title") as string);
+      resized.set("description", formData.get("description") as string);
+      resized.set("price", formData.get("price") as string);
+
+      for (const file of selectedFiles) {
+        if (file.size === 0) continue;
+        const compressed = await resizeImage(file);
+        resized.append("images", compressed);
+      }
+
+      await createProduct(resized);
+    } catch (err: unknown) {
+      if (typeof err === "object" && err !== null && "digest" in err) {
+        throw err;
+      }
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Something went wrong. Please try again."
+      );
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -19,7 +113,7 @@ export default function NewProductPage() {
       <div className="max-w-2xl mx-auto">
         <Link
           href="/admin"
-          className="text-muted hover:text-accent text-sm font-medium mb-6 inline-block min-h-11 flex items-center transition-colors"
+          className="text-muted hover:text-accent text-sm font-medium mb-6 inline-flex items-center min-h-11 transition-colors"
         >
           &larr; Back to dashboard
         </Link>
@@ -32,14 +126,7 @@ export default function NewProductPage() {
         </p>
 
         <form
-          action={async (formData) => {
-            setIsSubmitting(true);
-            try {
-              await createProduct(formData);
-            } catch {
-              setIsSubmitting(false);
-            }
-          }}
+          action={handleSubmit}
           className="bg-paper border border-line rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-black/[0.03] space-y-6"
         >
           <div>
@@ -127,12 +214,18 @@ export default function NewProductPage() {
             )}
           </div>
 
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+              {error}
+            </div>
+          )}
+
           <button
             type="submit"
             disabled={isSubmitting}
             className="w-full min-h-14 py-3.5 bg-accent text-white text-lg font-semibold rounded-xl hover:bg-accent-hover disabled:opacity-50 transition-colors cursor-pointer shadow-sm"
           >
-            {isSubmitting ? "Saving…" : "Save product"}
+            {isSubmitting ? "Compressing photos & saving…" : "Save product"}
           </button>
         </form>
       </div>
