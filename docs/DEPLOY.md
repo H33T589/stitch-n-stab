@@ -1,79 +1,142 @@
 # Deploy Stitch-n-Stab (Vercel + PorkBun)
 
-Your live site will be **Next.js on Vercel**, **PostgreSQL on Neon** (free tier is fine to start), **images on Vercel Blob**, and the domain **stitchnstab.com** on PorkBun pointing at Vercel.
+This project deploys as:
 
-## 1. Neon (database)
+- **Frontend + server actions:** Vercel (Next.js)
+- **Database:** Neon Postgres
+- **Image uploads in production:** Vercel Blob
+- **Domain:** `stitchnstab.com` on PorkBun
 
-1. Create a free account at [https://neon.tech](https://neon.tech).
-2. Create a project and database.
-3. Copy the **connection string** (pooled URL from Neon is fine). If it ends with `sslmode=require`, change it to **`sslmode=verify-full`** so Node’s `pg` driver doesn’t spam a security warning in dev (Neon supports it). If there’s no `sslmode`, append `&sslmode=verify-full` (or `?sslmode=verify-full` if the URL has no query yet).
-4. Keep this string secret — it is your `DATABASE_URL`.
+---
 
-Apply migrations (creates the `Product` table):
+## Where you are now
 
-```bash
-# In this repo, with DATABASE_URL in .env
-npx prisma migrate deploy
-```
+If you've already done these, skip ahead:
 
-## 2. GitHub
+- [x] Neon project created
+- [x] `DATABASE_URL` added locally in `.env`
+- [x] `npx prisma migrate deploy` succeeded locally
+- [x] Code committed/pushed to GitHub
 
-Push the latest code to the branch Vercel will deploy from (usually `main`).
+Your next move is mainly **Vercel setup + PorkBun DNS**.
 
-## 3. Vercel project
+---
 
-1. Go to [https://vercel.com](https://vercel.com) and sign in (e.g. with GitHub).
-2. **Add New Project** → import the **stitch-n-stab** repository.
-3. Framework Preset: **Next.js** (auto-detected).
-4. **Environment Variables** — add these before the first deploy (Production + Preview if you like):
+## 1) Neon connection string format (important)
 
-   | Name | Value |
-   |------|--------|
-   | `DATABASE_URL` | Your Neon connection string |
-   | `ADMIN_USERNAME` | e.g. `admin` (pick what Elaine will use) |
-   | `ADMIN_PASSWORD` | Strong password (not the sample from docs) |
-   | `JWT_SECRET` | Long random string (32+ characters) |
-   | `NEXT_PUBLIC_SITE_URL` | `https://stitchnstab.com` |
-   | `NEXT_PUBLIC_INSTAGRAM_URL` | Optional, full URL to the Instagram profile |
+Use the pooled Neon URL if available. Keep it secret.
 
-5. **Deploy**. The build runs `prisma migrate deploy` then `next build`, so the database must already exist and `DATABASE_URL` must be correct.
+If the URL has `sslmode=require`, change it to:
 
-### Vercel Blob (product photos)
+- `sslmode=verify-full`
 
-The filesystem on Vercel is not writable for uploads, so images use **Blob** in production.
+Examples:
 
-1. In the Vercel project: **Storage** → **Blob** → create a store and **connect** it to this project.
-2. Redeploy if needed. Vercel sets `BLOB_READ_WRITE_TOKEN` automatically — you usually do not paste it by hand.
+- `...neondb?sslmode=require` -> `...neondb?sslmode=verify-full`
+- `...neondb?channel_binding=require` -> `...neondb?channel_binding=require&sslmode=verify-full`
 
-## 4. Custom domain (PorkBun → Vercel)
+---
 
-1. In Vercel: **Project → Settings → Domains**.
-2. Add **`stitchnstab.com`** and **`www.stitchnstab.com`** (optional but common).
-3. Vercel will show the **DNS records** to create (often an **A** record for the apex and **CNAME** for `www`).
+## 2) Vercel project setup
 
-4. In **PorkBun** → your domain → **DNS**:
+1. Go to [https://vercel.com](https://vercel.com) and import the `stitch-n-stab` GitHub repo.
+2. Framework should auto-detect as **Next.js**.
+3. Before first deploy, set **Environment Variables** in Vercel:
 
-   - Add or edit records exactly as Vercel instructs (apex is often an **A** record to Vercel’s IP, or ALIAS/ANAME depending on PorkBun’s UI).
-   - For `www`, usually a **CNAME** to `cname.vercel-dns.com` (or whatever Vercel displays).
+| Name | Value |
+|------|-------|
+| `DATABASE_URL` | Neon URL (with `sslmode=verify-full`) |
+| `ADMIN_USERNAME` | Your admin username |
+| `ADMIN_PASSWORD` | Strong password |
+| `JWT_SECRET` | 32+ char random string |
+| `NEXT_PUBLIC_SITE_URL` | `https://stitchnstab.com` |
+| `NEXT_PUBLIC_INSTAGRAM_URL` | Optional |
 
-5. Wait for DNS (often minutes, sometimes up to 48 hours). Vercel will issue **HTTPS** automatically once the domain verifies.
+Scope: set these for **Production** (and Preview if you want).
 
-## 5. Local development after Postgres
+4. Deploy.
 
-Copy `.env.example` to `.env` and set `DATABASE_URL` to the **same** Neon database (simplest) or a separate Neon branch for dev. Run:
+Notes:
+
+- Build runs `prisma migrate deploy && next build`.
+- If `DATABASE_URL` is wrong, deployment will fail at migration step.
+
+---
+
+## 3) Enable Vercel Blob (required for prod image upload)
+
+Vercel server filesystem is ephemeral, so production uploads must use Blob.
+
+1. In Vercel project: **Storage -> Blob -> Create Store**.
+2. Link the Blob store to this project.
+3. Redeploy once linked.
+
+Vercel typically injects `BLOB_READ_WRITE_TOKEN` automatically. Do not commit this token.
+
+---
+
+## 4) Connect PorkBun domain to Vercel
+
+1. In Vercel: **Project -> Settings -> Domains**.
+2. Add:
+   - `stitchnstab.com`
+   - `www.stitchnstab.com` (optional but recommended)
+3. Vercel will show exact DNS records.
+4. In PorkBun DNS, create exactly what Vercel shows.
+
+Typical pattern (always trust Vercel’s exact instructions over this example):
+
+- Apex/root (`@`): `A` record to Vercel target
+- `www`: `CNAME` to Vercel target
+
+5. Wait for DNS propagation (minutes to up to 48h). HTTPS cert is auto-issued by Vercel after verification.
+
+---
+
+## 5) Verify production end-to-end
+
+After deploy + DNS:
+
+1. Open `https://stitchnstab.com`
+2. Open `https://stitchnstab.com/admin/login`
+3. Sign in with `ADMIN_USERNAME` / `ADMIN_PASSWORD`
+4. Add a product with at least one photo
+5. Confirm:
+   - product appears on homepage
+   - image URL is from Blob (not `/uploads/...`)
+   - hide/sold/delete actions work
+
+---
+
+## 6) Local development (ongoing)
 
 ```bash
 npm install
-npx prisma generate
+npx prisma migrate deploy
 npm run dev
 ```
 
-Without `BLOB_READ_WRITE_TOKEN`, images save under `public/uploads/` locally only.
+Local behavior:
 
-## Checklist
+- Without `BLOB_READ_WRITE_TOKEN`: images save to `public/uploads/`
+- With token: images upload to Blob
 
-- [ ] Neon project created; `DATABASE_URL` set on Vercel (+ local `.env`)
-- [ ] `ADMIN_*` and `JWT_SECRET` set on Vercel (different from any committed examples)
-- [ ] Blob store created and linked; production upload tested
-- [ ] PorkBun DNS matches Vercel’s domain wizard
-- [ ] Open `https://stitchnstab.com` and `/admin/login` and sign in
+---
+
+## Troubleshooting quick map
+
+- **Vercel deploy fails at migration:** bad or missing `DATABASE_URL`
+- **Admin login works but upload fails in production:** Blob not connected/token missing
+- **Domain not opening:** DNS records in PorkBun don’t match Vercel yet
+- **HTTPS pending:** wait for DNS verification + cert issuance
+
+---
+
+## Final checklist
+
+- [ ] GitHub repo is up to date
+- [ ] Vercel env vars set (Production)
+- [ ] Neon `DATABASE_URL` uses `sslmode=verify-full`
+- [ ] Blob store connected to Vercel project
+- [ ] PorkBun DNS records match Vercel
+- [ ] `https://stitchnstab.com` and `/admin/login` work
