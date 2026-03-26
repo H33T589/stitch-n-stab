@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/server/db";
 import Link from "next/link";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
 
 export const dynamic = "force-dynamic";
 

@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/db";
+import { prisma } from "@/server/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
 
 export default async function ProductPage({
   params,

@@ -32,13 +32,17 @@ Open [http://localhost:3000](http://localhost:3000) for the catalog and [http://
 
 **Images:** Locally, uploads go to `public/uploads/` when `BLOB_READ_WRITE_TOKEN` is not set. In production on Vercel, enable **Vercel Blob** (see deploy guide).
 
+## Project structure
+
+See **[docs/STRUCTURE.md](docs/STRUCTURE.md)** for where routes, server code, and UI live.
+
 ## Deploy (Vercel + domain)
 
 Step-by-step checklist (Neon, Vercel env vars, Blob, PorkBun DNS): **[docs/DEPLOY.md](docs/DEPLOY.md)**.
 
 ## Environment Variables
 
-See [.env.example](.env.example) for all keys. Never commit real secrets — `.env` stays local / in the Vercel dashboard only.
+See [.env.example](.env.example) for **placeholder keys only** (no real passwords). Copy it to `.env` and fill in secrets locally; never commit `.env`. Real values also go in the Vercel dashboard.
 
 ## Features
 

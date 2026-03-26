@@ -1,7 +1,7 @@
 "use server";
 
-import { prisma } from "./db";
-import { createSession, destroySession } from "./auth";
+import { prisma } from "@/server/db";
+import { createSession, destroySession } from "@/server/auth";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { writeFile, mkdir } from "fs/promises";

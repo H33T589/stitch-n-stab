@@ -1,6 +1,6 @@
 "use client";
 
-import { createProduct } from "@/lib/actions";
+import { createProduct } from "@/server/actions";
 import { useState } from "react";
 import Link from "next/link";
 

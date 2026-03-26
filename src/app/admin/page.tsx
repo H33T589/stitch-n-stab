@@ -1,5 +1,10 @@
-import { prisma } from "@/lib/db";
-import { logout, deleteProduct, toggleSold, togglePublished } from "@/lib/actions";
+import { prisma } from "@/server/db";
+import {
+  logout,
+  deleteProduct,
+  toggleSold,
+  togglePublished,
+} from "@/server/actions";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
