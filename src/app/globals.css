@@ -4,15 +4,24 @@
   --font-sans: var(--font-nunito);
   --font-display: var(--font-fraunces);
 
-  --color-canvas: #f5efe6;
-  --color-paper: #fffdf8;
-  --color-ink: #2a2622;
-  --color-muted: #6f6860;
-  --color-accent: #a8463d;
-  --color-accent-hover: #8f3a33;
-  --color-accent-soft: #f4e9e7;
-  --color-line: #e4dcd2;
-  --color-stitch: #c4a574;
+  /* Warm rose & plum palette */
+  --color-canvas: #fef6f0;
+  --color-paper: #ffffff;
+  --color-ink: #3b2f2f;
+  --color-muted: #8a7575;
+  --color-accent: #d4577a;
+  --color-accent-hover: #bf4268;
+  --color-accent-soft: #fce8ef;
+  --color-line: #f0ddd5;
+  --color-stitch: #e8a87c;
+  --color-warm-bg: #fdf0e9;
+  --color-plum: #7c5295;
+  --color-sage: #6a9e7e;
+  --color-sky: #5b9fc9;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -23,4 +32,30 @@ body {
 
 .font-display {
   font-family: var(--font-display), Georgia, serif;
+}
+
+.stitch-line {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-stitch) 0,
+    var(--color-stitch) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  height: 2px;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
 }

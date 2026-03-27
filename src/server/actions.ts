@@ -58,6 +58,8 @@ export async function logout() {
   redirect("/");
 }
 
+const MAX_PHOTOS = 6;
+
 export async function createProduct(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
@@ -66,10 +68,10 @@ export async function createProduct(formData: FormData) {
 
   const price = priceStr ? parseFloat(priceStr) : null;
 
+  const validFiles = files.filter((f) => f.size > 0).slice(0, MAX_PHOTOS);
   const imageUrls: string[] = [];
 
-  for (const file of files) {
-    if (file.size === 0) continue;
+  for (const file of validFiles) {
     imageUrls.push(await saveUploadedImage(file));
   }
 

@@ -6,6 +6,8 @@ import {
   togglePublished,
 } from "@/server/actions";
 import Link from "next/link";
+import { RotatingElaineGreeting } from "@/components/admin/rotating-elaine-greeting";
+import { AdminHelpButton } from "@/components/admin/admin-help-button";
 
 export const dynamic = "force-dynamic";
 
@@ -17,23 +19,31 @@ export default async function AdminDashboard() {
   return (
     <div className="min-h-screen bg-canvas p-4 sm:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8 gap-4">
-          <div>
-            <p className="font-display text-xl text-ink sm:text-2xl font-semibold">
-              Your products
-            </p>
-            <p className="text-muted text-sm mt-1">
-              Add, hide, mark sold, or remove listings.
-            </p>
+        <div className="mb-8 space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="font-display text-xl text-ink sm:text-2xl font-semibold">
+                Your products
+              </p>
+              <p className="text-muted text-sm mt-1">
+                Add, hide, mark sold, or remove listings.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <AdminHelpButton />
+              <form action={logout}>
+                <button
+                  type="submit"
+                  className="text-sm font-medium text-muted hover:text-accent transition-colors cursor-pointer min-h-11 px-2"
+                >
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="text-sm font-medium text-muted hover:text-accent transition-colors cursor-pointer min-h-11 px-2"
-            >
-              Sign out
-            </button>
-          </form>
+
+          <RotatingElaineGreeting />
         </div>
 
         <Link
