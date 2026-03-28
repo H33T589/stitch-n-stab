@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   images: string[];
@@ -10,10 +10,68 @@ type Props = {
 
 export function ProductGallery({ images, title }: Props) {
   const [active, setActive] = useState(0);
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  function goPrev() {
+    setActive((current) => (current === 0 ? images.length - 1 : current - 1));
+  }
+
+  function goNext() {
+    setActive((current) => (current === images.length - 1 ? 0 : current + 1));
+  }
+
+  function handleTouchStart(e: React.TouchEvent) {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  }
+
+  function handleTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current == null || touchStartY.current == null) return;
+
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX > 0) {
+        goPrev();
+      } else {
+        goNext();
+      }
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  }
+
+  useEffect(() => {
+    if (!isViewerOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setIsViewerOpen(false);
+      if (images.length > 1 && event.key === "ArrowLeft") {
+        setActive((current) => (current === 0 ? images.length - 1 : current - 1));
+      }
+      if (images.length > 1 && event.key === "ArrowRight") {
+        setActive((current) => (current === images.length - 1 ? 0 : current + 1));
+      }
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [images.length, isViewerOpen]);
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-square items-center justify-center rounded-[1.75rem] bg-warm-bg">
+      <div className="flex aspect-[4/5] items-center justify-center rounded-[1.45rem] bg-warm-bg sm:aspect-square sm:rounded-[1.75rem]">
         <svg
           className="h-16 w-16 text-muted/30"
           fill="none"
@@ -32,46 +90,178 @@ export function ProductGallery({ images, title }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="relative aspect-[0.96] overflow-hidden rounded-[1.45rem] bg-warm-bg ring-1 ring-white/80 sm:aspect-square sm:rounded-[1.75rem]">
-        <Image
-          src={images[active]}
-          alt={`${title} - photo ${active + 1}`}
-          fill
-          className="object-cover"
-          sizes="(min-width: 1024px) 40rem, 100vw"
-        />
+    <>
+      <div className="flex flex-col gap-4">
+        <button
+          type="button"
+          onClick={() => setIsViewerOpen(true)}
+          className="group relative block aspect-[4/5] overflow-hidden rounded-[1.45rem] bg-[#fffaf4] ring-1 ring-white/80 sm:aspect-square sm:rounded-[1.75rem]"
+          aria-label="Open full-screen photo viewer"
+        >
+          <Image
+            src={images[active]}
+            alt={`${title} - photo ${active + 1}`}
+            fill
+            className="object-contain transition duration-300 group-hover:scale-[1.01]"
+            sizes="(min-width: 1024px) 40rem, 100vw"
+          />
 
-        <div className="absolute left-3 top-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white backdrop-blur-sm sm:left-4 sm:top-4 sm:px-3 sm:text-xs sm:tracking-[0.18em]">
-          {active + 1} / {images.length}
-        </div>
+          <div className="absolute left-3 top-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white backdrop-blur-sm sm:left-4 sm:top-4 sm:px-3 sm:text-xs sm:tracking-[0.18em]">
+            {active + 1} / {images.length}
+          </div>
+
+          <div className="absolute bottom-3 right-3 rounded-full bg-paper/90 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-ink shadow-sm sm:text-xs">
+            Tap for full photo
+          </div>
+        </button>
+
+        {images.length > 1 && (
+          <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:gap-3 sm:px-0">
+            {images.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                onClick={() => setActive(i)}
+                className={`relative h-[4.5rem] w-[4.5rem] snap-start flex-shrink-0 overflow-hidden rounded-[0.95rem] transition-all duration-200 sm:h-20 sm:w-20 sm:rounded-[1rem] ${
+                  i === active
+                    ? "scale-[1.02] ring-2 ring-accent ring-offset-2 ring-offset-canvas"
+                    : "opacity-75 ring-1 ring-line hover:opacity-100 hover:ring-stitch"
+                }`}
+                aria-label={`Show photo ${i + 1}`}
+              >
+                <Image
+                  src={src}
+                  alt={`${title} - thumbnail ${i + 1}`}
+                  fill
+                  className="object-cover"
+                  sizes="5rem"
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {images.length > 1 && (
-        <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:gap-3 sm:px-0">
-          {images.map((src, i) => (
+      {isViewerOpen && (
+        <div className="fixed inset-0 z-[100] bg-[#171117]/95 text-white">
+          <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between gap-3 sm:inset-x-6 sm:top-6">
+            <div className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold tracking-[0.18em] backdrop-blur-sm">
+              {active + 1} / {images.length}
+            </div>
+
             <button
-              key={src}
               type="button"
-              onClick={() => setActive(i)}
-              className={`relative h-[4.5rem] w-[4.5rem] snap-start flex-shrink-0 overflow-hidden rounded-[0.95rem] transition-all duration-200 sm:h-20 sm:w-20 sm:rounded-[1rem] ${
-                i === active
-                  ? "scale-[1.02] ring-2 ring-accent ring-offset-2 ring-offset-canvas"
-                  : "opacity-75 ring-1 ring-line hover:opacity-100 hover:ring-stitch"
-              }`}
-              aria-label={`Show photo ${i + 1}`}
+              onClick={() => setIsViewerOpen(false)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm"
+              aria-label="Close photo viewer"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div className="relative flex h-full flex-col">
+            <div
+              className="relative flex-1 px-3 pb-28 pt-20 sm:px-10 sm:pb-32 sm:pt-24"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
             >
               <Image
-                src={src}
-                alt={`${title} - thumbnail ${i + 1}`}
+                src={images[active]}
+                alt={`${title} - full photo ${active + 1}`}
                 fill
-                className="object-cover"
-                sizes="5rem"
+                className="object-contain"
+                sizes="100vw"
               />
-            </button>
-          ))}
+
+              {images.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={goPrev}
+                    className="absolute left-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm sm:left-6"
+                    aria-label="Previous photo"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={goNext}
+                    className="absolute right-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm sm:right-6"
+                    aria-label="Next photo"
+                  >
+                    <svg
+                      className="h-5 w-5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
+            </div>
+
+            {images.length > 1 && (
+              <div className="absolute inset-x-0 bottom-0 border-t border-white/10 bg-[#211921]/90 px-4 py-4 backdrop-blur-md sm:px-6">
+                <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1">
+                  {images.map((src, i) => (
+                    <button
+                      key={`${src}-viewer`}
+                      type="button"
+                      onClick={() => setActive(i)}
+                      className={`relative h-16 w-16 snap-start flex-shrink-0 overflow-hidden rounded-[0.9rem] ${
+                        i === active
+                          ? "ring-2 ring-white"
+                          : "opacity-70 ring-1 ring-white/15"
+                      }`}
+                      aria-label={`View photo ${i + 1}`}
+                    >
+                      <Image
+                        src={src}
+                        alt={`${title} - viewer thumbnail ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="4rem"
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
-    </div>
+    </>
   );
 }

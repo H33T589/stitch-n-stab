@@ -13,6 +13,7 @@ model Product {
   description String   @default("")
   price       Float?
   imageUrls   String   @default("[]")
+  viewCount   Int      @default(0)
   sold        Boolean  @default(false)
   published   Boolean  @default(true)
   createdAt   DateTime @default(now())

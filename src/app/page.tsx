@@ -70,7 +70,7 @@ function ProductCard({ product, index }: ProductCardProps) {
       className="group animate-fade-in-up panel-surface block overflow-hidden rounded-[1.55rem] p-3 transition duration-300 hover:-translate-y-1.5 sm:rounded-[1.85rem]"
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      <div className="relative aspect-[0.94] overflow-hidden rounded-[1.2rem] bg-warm-bg sm:rounded-[1.4rem]">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[1.2rem] bg-warm-bg sm:aspect-[0.94] sm:rounded-[1.4rem]">
         {product.images[0] ? (
           <Image
             src={product.images[0]}
@@ -103,7 +103,7 @@ function ProductCard({ product, index }: ProductCardProps) {
         <p className="section-kicker text-[0.68rem]">One of a kind</p>
 
         <div className="mt-3 flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-          <h2 className="max-w-[15rem] font-display text-[1.28rem] font-semibold leading-tight text-ink transition-colors group-hover:text-accent sm:text-[1.35rem]">
+          <h2 className="max-w-[15rem] font-display text-[1.08rem] font-semibold leading-tight text-ink transition-colors group-hover:text-accent sm:text-[1.35rem]">
             {product.title}
           </h2>
           {price && (
@@ -114,7 +114,7 @@ function ProductCard({ product, index }: ProductCardProps) {
         </div>
 
         {product.description && (
-          <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted">
+          <p className="mt-3 hidden line-clamp-2 text-sm leading-relaxed text-muted sm:block">
             {product.description}
           </p>
         )}
@@ -346,7 +346,7 @@ export default async function HomePage() {
               )}
 
               {remainingProducts.length > 0 && (
-                <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
                   {remainingProducts.map((product, index) => (
                     <ProductCard key={product.id} product={product} index={index} />
                   ))}
