@@ -1,9 +1,19 @@
-import { prisma } from "@/server/db";
-import { notFound } from "next/navigation";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ProductGallery } from "@/components/site/product-gallery";
+import { ContactActions } from "@/components/site/contact-actions";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
-import { ProductGallery } from "@/components/site/product-gallery";
+import { prisma } from "@/server/db";
+
+function parseImageUrls(raw: string) {
+  try {
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((value) => typeof value === "string") : [];
+  } catch {
+    return [];
+  }
+}
 
 export default async function ProductPage({
   params,
@@ -18,174 +28,133 @@ export default async function ProductPage({
 
   if (!product) notFound();
 
-  const images: string[] = JSON.parse(product.imageUrls);
-  const instagram = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
+  const images = parseImageUrls(product.imageUrls);
+  const listedDate = product.createdAt.toLocaleDateString("en-CA", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="site-shell flex min-h-screen flex-col">
       <SiteHeader linkWholeTitle />
 
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10">
-        <Link
-          href="/"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-accent transition-colors mb-6 sm:mb-8 group"
-        >
-          <svg
-            className="w-4 h-4 transition-transform group-hover:-translate-x-0.5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+      <main className="flex-1 pb-14 pt-6 sm:pb-20 sm:pt-8">
+        <div className="page-section">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-accent"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          Back to all products
-        </Link>
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Back to all products
+          </Link>
 
-        <div className="animate-fade-in-up grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-10">
-          <ProductGallery images={images} title={product.title} />
-
-          <div className="flex flex-col">
-            <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-semibold text-ink leading-tight">
-              {product.title}
-            </h1>
-
-            {product.price != null && (
-              <p className="mt-3 text-2xl sm:text-3xl font-bold text-accent">
-                ${product.price.toFixed(2)}
-              </p>
-            )}
-
-            {product.sold && (
-              <span className="mt-4 inline-flex items-center gap-1.5 bg-accent text-white px-3.5 py-1.5 rounded-full text-sm font-bold uppercase tracking-wide w-fit shadow-sm">
-                <svg
-                  className="w-3.5 h-3.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Sold
-              </span>
-            )}
-
-            {product.description && (
-              <div className="mt-6 sm:mt-8">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-muted mb-2">
-                  About this piece
-                </h2>
-                <p className="text-ink/80 leading-relaxed whitespace-pre-wrap">
-                  {product.description}
-                </p>
-              </div>
-            )}
-
-            {/* Contact CTA */}
-            <div className="mt-auto pt-8">
-              <div className="rounded-2xl bg-warm-bg border border-line p-5 sm:p-6">
-                <p className="font-display text-lg font-semibold text-ink mb-1.5">
-                  Love this piece?
-                </p>
-                <p className="text-muted text-sm leading-relaxed mb-4">
-                  Just reach out &mdash; I&rsquo;d love to hear from you!
-                </p>
-                <div className="flex flex-wrap gap-2.5">
-                  <a
-                    href="tel:+17788715252"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    Call
-                  </a>
-                  <a
-                    href="sms:+17788715252"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sky text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm"
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                    Text
-                  </a>
-
-                  {instagram && (
-                    <a
-                      href={instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-plum text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm"
-                    >
-                      <svg
-                        className="w-4 h-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        aria-hidden="true"
-                      >
-                        <rect
-                          x="2"
-                          y="2"
-                          width="20"
-                          height="20"
-                          rx="5"
-                        />
-                        <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5" />
-                        <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" />
-                      </svg>
-                      Instagram
-                    </a>
-                  )}
-                </div>
-              </div>
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-start xl:gap-8">
+            <div className="panel-surface rounded-[2rem] p-4 sm:p-5 lg:sticky lg:top-8">
+              <ProductGallery images={images} title={product.title} />
             </div>
 
-            <div className="mt-6 flex items-center gap-4 text-xs text-muted/70">
-              <span>
-                Listed{" "}
-                {product.createdAt.toLocaleDateString("en-CA", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-              {images.length > 0 && (
-                <>
-                  <span className="w-0.5 h-0.5 rounded-full bg-muted/40" />
-                  <span>
-                    {images.length} photo{images.length > 1 ? "s" : ""}
+            <div className="space-y-5">
+              <section className="panel-surface rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
+                <p className="section-kicker">Elaine&apos;s latest piece</p>
+                <h1 className="mt-4 font-display text-[2.5rem] font-semibold leading-[0.96] text-ink sm:text-[3.3rem]">
+                  {product.title}
+                </h1>
+
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  {product.price != null && (
+                    <p className="rounded-full bg-accent-soft px-4 py-2 text-lg font-bold text-accent">
+                      ${product.price.toFixed(2)}
+                    </p>
+                  )}
+                  <span
+                    className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                      product.sold
+                        ? "bg-accent text-white"
+                        : "bg-[#fff4ea] text-ink"
+                    }`}
+                  >
+                    {product.sold ? "Already sold" : "Available right now"}
                   </span>
-                </>
-              )}
+                  <span className="rounded-full bg-[#f6efe8] px-4 py-2 text-sm font-semibold text-muted">
+                    One of a kind
+                  </span>
+                </div>
+
+                {product.description && (
+                  <div className="mt-7 rounded-[1.5rem] bg-[#fff7f1] p-5 ring-1 ring-white/75">
+                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">
+                      About this piece
+                    </p>
+                    <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink/85">
+                      {product.description}
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              <section className="grid gap-4 sm:grid-cols-3">
+                <div className="panel-surface rounded-[1.6rem] px-5 py-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+                    Handmade
+                  </p>
+                  <p className="mt-2 font-display text-xl font-semibold text-ink">
+                    Crafted by Elaine
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    Made with care in British Columbia.
+                  </p>
+                </div>
+
+                <div className="panel-surface rounded-[1.6rem] px-5 py-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+                    Photos
+                  </p>
+                  <p className="mt-2 font-display text-xl font-semibold text-ink">
+                    {images.length} view{images.length === 1 ? "" : "s"}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    Tap through the gallery for a closer look.
+                  </p>
+                </div>
+
+                <div className="panel-surface rounded-[1.6rem] px-5 py-5">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+                    Listed
+                  </p>
+                  <p className="mt-2 font-display text-xl font-semibold text-ink">
+                    {listedDate}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">
+                    Reach out soon if this piece feels right.
+                  </p>
+                </div>
+              </section>
+
+              <section className="panel-surface rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
+                <p className="section-kicker">Love this piece?</p>
+                <h2 className="mt-4 font-display text-3xl font-semibold text-ink">
+                  Elaine would love to hear from you.
+                </h2>
+                <p className="mt-3 max-w-xl text-base leading-relaxed text-muted">
+                  The fastest way to claim a piece or ask a question is to call
+                  or text directly. Instagram works too if that is easier.
+                </p>
+
+                <ContactActions className="mt-6" />
+              </section>
             </div>
           </div>
         </div>

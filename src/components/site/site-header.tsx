@@ -1,74 +1,69 @@
+import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
   linkWholeTitle?: boolean;
 };
 
-function YarnIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      className={className}
-      aria-hidden="true"
-    >
-      <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1.5" />
-      <path
-        d="M10 8c4 3 8 10 12 16"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M6 16c5-2 12-2 20 0"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M10 24c4-4 10-8 14-12"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M26 14c1.5-2 2.5-3 3-4"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 export function SiteHeader({ linkWholeTitle = false }: Props) {
   const brand = (
-    <div className="flex flex-col items-center text-center">
-      <YarnIcon className="w-9 h-9 sm:w-10 sm:h-10 text-stitch mb-2" />
-      <p className="font-display text-3xl sm:text-4xl font-semibold text-ink tracking-tight leading-none">
-        Stitch-n-Stab
-      </p>
-      <p className="text-muted text-sm sm:text-base mt-1.5 max-w-xs leading-snug">
-        Handmade with love by Elaine
-      </p>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+      <Image
+        src="/stitch-n-stab-logo.svg"
+        alt="Stitch 'N' Stab logo"
+        width={220}
+        height={168}
+        className="h-auto w-[170px] sm:w-[200px]"
+        priority
+      />
+
+      <div className="min-w-0">
+        <p className="section-kicker">Funny and funky crochet</p>
+        <p className="mt-3 max-w-md text-base leading-relaxed text-muted sm:text-lg">
+          Bright handmade pieces from Elaine in British Columbia, with humor,
+          charm, and just the right amount of weird.
+        </p>
+      </div>
     </div>
   );
 
   return (
-    <header className="bg-paper border-b border-line">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col items-center">
-        {linkWholeTitle ? (
-          <Link
-            href="/"
-            className="group inline-flex flex-col items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas rounded-lg transition-opacity hover:opacity-80"
-          >
-            {brand}
-          </Link>
-        ) : (
-          brand
-        )}
+    <header className="pt-5 sm:pt-8">
+      <div className="page-section">
+        <div className="panel-surface relative overflow-hidden rounded-[2rem] px-5 py-5 sm:px-8 sm:py-7">
+          <div className="hero-orb -left-10 top-4 h-28 w-28 bg-accent-soft" />
+          <div className="hero-orb right-6 top-0 h-24 w-24 bg-[#fde7d7]" />
+
+          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            {linkWholeTitle ? (
+              <Link
+                href="/"
+                className="rounded-[1.5rem] transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+              >
+                {brand}
+              </Link>
+            ) : (
+              brand
+            )}
+
+            <div className="flex flex-wrap gap-3 lg:justify-end">
+              <Link
+                href={linkWholeTitle ? "/" : "#catalog"}
+                className="button-secondary"
+              >
+                {linkWholeTitle ? "Browse catalog" : "See the collection"}
+              </Link>
+              <Link href="#contact" className="button-primary">
+                Contact Elaine
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-4 w-[min(94%,1040px)]">
+          <div className="thread-divider" />
+        </div>
       </div>
-      <div className="stitch-line" />
     </header>
   );
 }

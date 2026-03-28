@@ -2,6 +2,7 @@
 
 import { createProduct } from "@/server/actions";
 import { useState, useRef } from "react";
+import NextImage from "next/image";
 import Link from "next/link";
 import { RotatingElaineGreeting } from "@/components/admin/rotating-elaine-greeting";
 import { AdminHelpButton } from "@/components/admin/admin-help-button";
@@ -243,9 +244,12 @@ export default function NewProductPage() {
               <div className="grid grid-cols-3 gap-3 mb-3">
                 {photos.map((entry, i) => (
                   <div key={entry.preview} className="relative group/thumb">
-                    <img
+                    <NextImage
                       src={entry.preview}
                       alt={`Photo ${i + 1}`}
+                      width={400}
+                      height={400}
+                      unoptimized
                       className="w-full aspect-square object-cover rounded-xl border border-line"
                     />
                     {i === 0 && (

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 
 type Props = {
@@ -12,9 +13,9 @@ export function ProductGallery({ images, title }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="aspect-square bg-warm-bg rounded-2xl flex items-center justify-center">
+      <div className="flex aspect-square items-center justify-center rounded-[1.75rem] bg-warm-bg">
         <svg
-          className="w-16 h-16 text-muted/30"
+          className="h-16 w-16 text-muted/30"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -31,32 +32,41 @@ export function ProductGallery({ images, title }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="aspect-square overflow-hidden rounded-2xl bg-warm-bg">
-        <img
+    <div className="flex flex-col gap-4">
+      <div className="relative aspect-square overflow-hidden rounded-[1.75rem] bg-warm-bg ring-1 ring-white/80">
+        <Image
           src={images[active]}
-          alt={`${title} — photo ${active + 1}`}
-          className="w-full h-full object-cover transition-opacity duration-300"
+          alt={`${title} - photo ${active + 1}`}
+          fill
+          className="object-cover"
+          sizes="(min-width: 1024px) 40rem, 100vw"
         />
+
+        <div className="absolute left-4 top-4 rounded-full bg-ink/70 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white backdrop-blur-sm">
+          {active + 1} / {images.length}
+        </div>
       </div>
 
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1">
+        <div className="flex gap-3 overflow-x-auto pb-1">
           {images.map((src, i) => (
             <button
-              key={i}
+              key={src}
               type="button"
               onClick={() => setActive(i)}
-              className={`relative w-16 h-16 sm:w-[72px] sm:h-[72px] flex-shrink-0 rounded-xl overflow-hidden transition-all duration-200 cursor-pointer ${
+              className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-[1rem] transition-all duration-200 ${
                 i === active
-                  ? "ring-2 ring-accent ring-offset-2 ring-offset-canvas"
-                  : "ring-1 ring-line hover:ring-stitch opacity-70 hover:opacity-100"
+                  ? "scale-[1.02] ring-2 ring-accent ring-offset-2 ring-offset-canvas"
+                  : "opacity-75 ring-1 ring-line hover:opacity-100 hover:ring-stitch"
               }`}
+              aria-label={`Show photo ${i + 1}`}
             >
-              <img
+              <Image
                 src={src}
-                alt={`${title} — thumbnail ${i + 1}`}
-                className="w-full h-full object-cover"
+                alt={`${title} - thumbnail ${i + 1}`}
+                fill
+                className="object-cover"
+                sizes="5rem"
               />
             </button>
           ))}

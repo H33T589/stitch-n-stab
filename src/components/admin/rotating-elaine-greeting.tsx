@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const MESSAGES = [
   "Hi Elaine! Hope you're having a great day.",
@@ -12,13 +12,9 @@ const MESSAGES = [
 ];
 
 export function RotatingElaineGreeting() {
-  const [message, setMessage] = useState(MESSAGES[0]);
-
-  useEffect(() => {
-    // Pick a new message every time the page is mounted.
-    const pick = Math.floor(Math.random() * MESSAGES.length);
-    setMessage(MESSAGES[pick]);
-  }, []);
+  const [message] = useState(
+    () => MESSAGES[Math.floor(Math.random() * MESSAGES.length)]
+  );
 
   return (
     <div className="rounded-2xl border border-white/10 bg-[#0B1020]/70 backdrop-blur px-4 py-3 sm:px-5 sm:py-4 shadow-[0_10px_35px_rgba(0,0,0,0.35)]">
@@ -34,4 +30,3 @@ export function RotatingElaineGreeting() {
     </div>
   );
 }
-

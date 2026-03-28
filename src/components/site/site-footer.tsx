@@ -1,111 +1,56 @@
 import Link from "next/link";
-
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
-      <rect
-        x="2"
-        y="2"
-        width="20"
-        height="20"
-        rx="5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="17.5" cy="6.5" r="1.25" fill="currentColor" />
-    </svg>
-  );
-}
-
-function PhoneIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
-      <path
-        d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function MessageIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden>
-      <path
-        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+import { ContactActions } from "@/components/site/contact-actions";
 
 export function SiteFooter() {
-  const instagram = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
-
   return (
-    <footer className="mt-auto border-t border-line bg-paper">
-      <div className="stitch-line" />
+    <footer id="contact" className="mt-auto pb-8 pt-14 sm:pb-10 sm:pt-20">
+      <div className="page-section">
+        <div className="panel-surface overflow-hidden rounded-[2rem] px-6 py-8 sm:px-8 sm:py-10">
+          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+            <div>
+              <p className="section-kicker">Get in touch</p>
+              <h2 className="mt-4 max-w-xl font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
+                See something you love? Elaine is easy to reach.
+              </h2>
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
+                Every piece is handmade, one of a kind, and usually carrying a
+                little humor with it too. Call, text, or say hello on
+                Instagram.
+              </p>
+            </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-        <div className="flex flex-col items-center text-center gap-6">
-          <p className="font-display text-xl text-ink">Get in touch</p>
-          <p className="text-muted text-sm max-w-sm leading-relaxed">
-            Like something you see? Don&rsquo;t be shy — give me a call, shoot
-            me a text, or find me on Instagram.
-          </p>
+            <div className="rounded-[1.75rem] bg-warm-bg/70 p-5 ring-1 ring-white/70 sm:p-6">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+                Reach Elaine
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">
+                Fastest option: text or call directly. Instagram is there too if
+                that is easier.
+              </p>
 
-          {/* Contact buttons */}
-          <div className="flex flex-wrap justify-center gap-3">
-            <a
-              href="tel:+17788715252"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-sage text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm"
-            >
-              <PhoneIcon className="w-4 h-4" />
-              Call me
-            </a>
-            <a
-              href="sms:+17788715252"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-sky text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm"
-            >
-              <MessageIcon className="w-4 h-4" />
-              Text me
-            </a>
-            {instagram && (
-              <a
-                href={instagram}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-plum text-white text-sm font-semibold hover:opacity-90 transition-opacity shadow-sm"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <InstagramIcon className="w-4 h-4" />
-                Instagram
-              </a>
-            )}
+              <ContactActions
+                className="mt-5"
+                buttonClassName="min-w-[11rem] sm:min-w-0"
+              />
+            </div>
           </div>
 
-          <div className="w-16 stitch-line mt-2" />
+          <div className="my-8 thread-divider" />
 
-          <p className="text-muted text-sm max-w-xs leading-relaxed">
-            Every piece is handmade and one-of-a-kind, crocheted right here in
-            BC.
-          </p>
+          <div className="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              Handmade in British Columbia by Elaine, with color, humor, and a
+              lot of yarn.
+            </p>
 
-          {/* Hidden admin link — looks like plain copyright text */}
-          <Link
-            href="/admin/login"
-            className="text-muted/40 text-xs hover:text-muted/60 transition-colors cursor-default"
-            aria-label="Admin"
-            tabIndex={-1}
-          >
-            &copy; {new Date().getFullYear()} Stitch-n-Stab
-          </Link>
+            <Link
+              href="/admin/login"
+              className="w-fit text-xs uppercase tracking-[0.18em] text-muted/55 transition-colors hover:text-muted"
+              aria-label="Admin sign in"
+            >
+              &copy; {new Date().getFullYear()} Stitch-n-Stab
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

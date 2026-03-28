@@ -1,0 +1,24 @@
+<svg width="360" height="300" viewBox="0 0 360 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(86 18)">
+    <circle cx="94" cy="86" r="70" stroke="#655D87" stroke-width="8"/>
+    <circle cx="94" cy="86" r="10" fill="#655D87"/>
+
+    <path d="M94 38C106 49 111 60 111 72C111 83 104 91 94 96C84 91 77 83 77 72C77 60 82 49 94 38Z" stroke="#655D87" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M142 86C131 98 120 103 108 103C97 103 89 96 84 86C89 76 97 69 108 69C120 69 131 74 142 86Z" stroke="#655D87" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M94 134C82 123 77 112 77 100C77 89 84 81 94 76C104 81 111 89 111 100C111 112 106 123 94 134Z" stroke="#655D87" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M46 86C57 74 68 69 80 69C91 69 99 76 104 86C99 96 91 103 80 103C68 103 57 98 46 86Z" stroke="#655D87" stroke-width="8" stroke-linejoin="round"/>
+
+    <path d="M61 53C66 69 78 76 94 76C110 76 122 69 127 53" stroke="#655D87" stroke-width="7" stroke-linecap="round"/>
+    <path d="M61 119C66 103 78 96 94 96C110 96 122 103 127 119" stroke="#655D87" stroke-width="7" stroke-linecap="round"/>
+    <path d="M60 86C76 81 84 69 84 53C84 42 79 33 72 27" stroke="#655D87" stroke-width="7" stroke-linecap="round"/>
+    <path d="M128 86C112 81 104 69 104 53C104 42 109 33 116 27" stroke="#655D87" stroke-width="7" stroke-linecap="round"/>
+
+    <path d="M143 136C134 139 127 145 121 153C114 163 106 169 98 172" stroke="#655D87" stroke-width="8" stroke-linecap="round"/>
+    <path d="M147 129C153 132 160 132 166 128C172 123 173 115 169 109C165 102 157 100 151 104C144 109 142 118 147 129Z" fill="white" stroke="#655D87" stroke-width="7" stroke-linejoin="round"/>
+    <path d="M150 116H165" stroke="#655D87" stroke-width="6" stroke-linecap="round"/>
+    <path d="M158 109V123" stroke="#655D87" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <text x="180" y="236" text-anchor="middle" fill="#655D87" font-size="28" font-weight="800" letter-spacing="8" font-family="Nunito, Arial, sans-serif">STITCH</text>
+  <text x="180" y="270" text-anchor="middle" fill="#655D87" font-size="22" font-weight="800" letter-spacing="9" font-family="Nunito, Arial, sans-serif">'N' STAB</text>
+</svg>

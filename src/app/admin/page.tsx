@@ -5,6 +5,7 @@ import {
   toggleSold,
   togglePublished,
 } from "@/server/actions";
+import Image from "next/image";
 import Link from "next/link";
 import { RotatingElaineGreeting } from "@/components/admin/rotating-elaine-greeting";
 import { AdminHelpButton } from "@/components/admin/admin-help-button";
@@ -70,9 +71,11 @@ export default async function AdminDashboard() {
                 >
                   <div className="w-24 h-24 rounded-xl bg-[#ebe4db] flex-shrink-0 overflow-hidden border border-line">
                     {images[0] ? (
-                      <img
+                      <Image
                         src={images[0]}
                         alt={product.title}
+                        width={96}
+                        height={96}
                         className="w-full h-full object-cover"
                       />
                     ) : (

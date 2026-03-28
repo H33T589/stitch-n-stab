@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Nunito } from "next/font/google";
+import { Nunito, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
 const nunito = Nunito({
@@ -8,10 +8,10 @@ const nunito = Nunito({
   weight: ["400", "500", "600", "700"],
 });
 
-const fraunces = Fraunces({
+const playfairDisplay = Playfair_Display({
   variable: "--font-fraunces",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["600", "700"],
 });
 
 const siteUrl =
@@ -19,9 +19,9 @@ const siteUrl =
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Stitch-n-Stab | Handmade Crochet",
+  title: "Stitch-n-Stab | Funny Handmade Crochet",
   description:
-    "Handmade crochet products crafted with care. Browse unique, one-of-a-kind creations.",
+    "Bright, funny, funky handmade crochet by Elaine. Browse one-of-a-kind creations with humor and personality.",
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${nunito.variable} ${fraunces.variable} antialiased`}
+      className={`${nunito.variable} ${playfairDisplay.variable} antialiased`}
     >
       <body className="min-h-screen flex flex-col bg-canvas font-sans text-ink">
         {children}

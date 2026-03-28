@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState } from "react";
 import { login } from "@/server/actions";
 
@@ -13,10 +14,15 @@ export default function AdminLoginPage() {
         className="bg-paper border border-line rounded-2xl shadow-sm w-full max-w-sm space-y-6 p-8 ring-1 ring-black/[0.04]"
       >
         <div className="text-center">
-          <p className="font-display text-xl font-semibold text-ink">
-            Stitch-n-Stab
-          </p>
-          <h1 className="text-lg font-semibold text-muted mt-2">Admin sign in</h1>
+          <Image
+            src="/stitch-n-stab-logo.svg"
+            alt="Stitch 'N' Stab logo"
+            width={160}
+            height={122}
+            className="mx-auto h-auto w-32"
+            priority
+          />
+          <h1 className="text-lg font-semibold text-muted mt-3">Admin sign in</h1>
         </div>
 
         {state?.error && (
