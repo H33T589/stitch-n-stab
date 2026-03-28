@@ -58,7 +58,7 @@ function InstagramIcon({ className }: { className?: string }) {
 export function ContactActions({ className, buttonClassName }: Props) {
   const instagram = process.env.NEXT_PUBLIC_INSTAGRAM_URL;
   const baseButtonClassName =
-    "inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-sm transition-all duration-200 hover:-translate-y-0.5";
 
   return (
     <div className={joinClasses("flex flex-wrap gap-3", className)}>

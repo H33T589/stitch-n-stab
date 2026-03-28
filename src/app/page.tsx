@@ -67,10 +67,10 @@ function ProductCard({ product, index }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.id}`}
-      className="group animate-fade-in-up panel-surface block overflow-hidden rounded-[1.85rem] p-3 transition duration-300 hover:-translate-y-1.5"
+      className="group animate-fade-in-up panel-surface block overflow-hidden rounded-[1.55rem] p-3 transition duration-300 hover:-translate-y-1.5 sm:rounded-[1.85rem]"
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      <div className="relative aspect-[0.94] overflow-hidden rounded-[1.4rem] bg-warm-bg">
+      <div className="relative aspect-[0.94] overflow-hidden rounded-[1.2rem] bg-warm-bg sm:rounded-[1.4rem]">
         {product.images[0] ? (
           <Image
             src={product.images[0]}
@@ -102,8 +102,8 @@ function ProductCard({ product, index }: ProductCardProps) {
       <div className="px-1 pb-1 pt-4">
         <p className="section-kicker text-[0.68rem]">One of a kind</p>
 
-        <div className="mt-3 flex items-start justify-between gap-3">
-          <h2 className="max-w-[15rem] font-display text-[1.35rem] font-semibold leading-tight text-ink transition-colors group-hover:text-accent">
+        <div className="mt-3 flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+          <h2 className="max-w-[15rem] font-display text-[1.28rem] font-semibold leading-tight text-ink transition-colors group-hover:text-accent sm:text-[1.35rem]">
             {product.title}
           </h2>
           {price && (
@@ -153,22 +153,22 @@ export default async function HomePage() {
       <SiteHeader />
 
       <main className="flex-1">
-        <section className="page-section pb-10 pt-6 sm:pb-14 sm:pt-8">
-          <div className="grid gap-8 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
+        <section className="page-section pb-10 pt-5 sm:pb-14 sm:pt-8">
+          <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
             <div className="animate-fade-in-up">
               <p className="section-kicker">Bright and cheeky crochet</p>
-              <h1 className="mt-6 font-display text-[3rem] font-semibold leading-[0.96] text-ink sm:text-[4.1rem] lg:mt-7 lg:text-[4.95rem]">
+              <h1 className="mt-5 font-display text-[2.5rem] font-semibold leading-[0.98] text-ink sm:mt-6 sm:text-[4.1rem] lg:mt-7 lg:text-[4.95rem]">
                 <span className="block">Bright, funny, funky</span>
                 <span className="block">crochet by Elaine.</span>
               </h1>
-              <p className="mt-7 max-w-[41rem] text-[1.05rem] leading-[1.72] text-muted sm:text-[1.22rem]">
+              <p className="mt-5 max-w-[41rem] text-[0.98rem] leading-[1.68] text-muted sm:mt-7 sm:text-[1.22rem]">
                 From cheeky little cacti to playful creatures and creative
                 oddballs, Elaine makes handmade crochet with real grandma
                 energy and a wicked sense of humor. Every piece is stitched in
                 British Columbia and made to make somebody smile.
               </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
                 <Link href="#catalog" className="button-primary">
                   Browse the collection
                 </Link>
@@ -177,7 +177,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="mt-9 flex flex-wrap gap-3 text-sm">
+              <div className="mt-8 grid grid-cols-1 gap-3 text-sm sm:mt-9 sm:flex sm:flex-wrap">
                 <div className="rounded-full bg-paper/80 px-4 py-2 font-semibold text-ink ring-1 ring-white/80">
                   {catalog.length} published piece{catalog.length === 1 ? "" : "s"}
                 </div>
@@ -190,14 +190,14 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="animate-fade-in-up panel-surface relative overflow-hidden rounded-[2.2rem] p-5 sm:p-6">
+            <div className="animate-fade-in-up panel-surface relative overflow-hidden rounded-[1.65rem] p-4 sm:rounded-[2.2rem] sm:p-6">
               <div className="hero-orb -right-8 bottom-6 h-32 w-32 bg-accent-soft" />
               <div className="hero-orb left-12 top-10 h-20 w-20 bg-[#fde0cb]" />
 
-              <div className="relative aspect-[1.03]">
+              <div className="relative aspect-[1.08] sm:aspect-[1.03]">
                 {heroImages.length > 0 ? (
                   <>
-                    <div className="absolute inset-x-[10%] top-0 h-[68%] overflow-hidden rounded-[1.8rem] bg-warm-bg shadow-[0_28px_60px_rgba(94,53,43,0.14)]">
+                    <div className="absolute inset-x-0 top-0 h-[70%] overflow-hidden rounded-[1.3rem] bg-warm-bg shadow-[0_20px_45px_rgba(94,53,43,0.14)] sm:inset-x-[10%] sm:h-[68%] sm:rounded-[1.8rem] sm:shadow-[0_28px_60px_rgba(94,53,43,0.14)]">
                       <Image
                         src={heroImages[0].src}
                         alt={heroImages[0].title}
@@ -207,7 +207,7 @@ export default async function HomePage() {
                       />
                     </div>
                     {heroImages[1] && (
-                      <div className="absolute bottom-[14%] left-0 h-[42%] w-[42%] overflow-hidden rounded-[1.5rem] bg-paper shadow-[0_22px_48px_rgba(94,53,43,0.12)] ring-8 ring-[#fff8f3]">
+                      <div className="absolute bottom-[18%] left-0 hidden h-[42%] w-[42%] overflow-hidden rounded-[1.5rem] bg-paper shadow-[0_22px_48px_rgba(94,53,43,0.12)] ring-8 ring-[#fff8f3] sm:block">
                         <Image
                           src={heroImages[1].src}
                           alt={heroImages[1].title}
@@ -218,9 +218,9 @@ export default async function HomePage() {
                       </div>
                     )}
                     {heroImages[2] && (
-                      <div className="absolute bottom-0 right-0 h-[38%] w-[48%] rounded-[1.6rem] bg-[#fff8f1] p-4 shadow-[0_22px_48px_rgba(94,53,43,0.12)]">
+                      <div className="absolute inset-x-0 bottom-0 rounded-[1.25rem] bg-[#fff8f1]/96 p-4 shadow-[0_18px_36px_rgba(94,53,43,0.12)] sm:inset-x-auto sm:right-0 sm:h-[38%] sm:w-[48%] sm:rounded-[1.6rem] sm:bg-[#fff8f1] sm:shadow-[0_22px_48px_rgba(94,53,43,0.12)]">
                         <p className="section-kicker text-[0.65rem]">Elaine&apos;s touch</p>
-                        <p className="mt-3 font-display text-xl font-semibold text-ink">
+                        <p className="mt-3 font-display text-lg font-semibold text-ink sm:text-xl">
                           Handmade, hilarious, and impossible to mass-produce.
                         </p>
                         <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -278,9 +278,9 @@ export default async function HomePage() {
               {featuredProduct && (
                 <Link
                   href={`/products/${featuredProduct.id}`}
-                  className="group panel-surface mt-8 grid overflow-hidden rounded-[2.1rem] p-4 transition duration-300 hover:-translate-y-1.5 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-6"
+                  className="group panel-surface mt-8 grid overflow-hidden rounded-[1.65rem] p-3 transition duration-300 hover:-translate-y-1.5 sm:rounded-[2.1rem] sm:p-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-6"
                 >
-                  <div className="relative min-h-[19rem] overflow-hidden rounded-[1.7rem] bg-warm-bg sm:min-h-[25rem]">
+                  <div className="relative min-h-[16rem] overflow-hidden rounded-[1.35rem] bg-warm-bg sm:min-h-[25rem] sm:rounded-[1.7rem]">
                     {featuredProduct.images[0] ? (
                       <Image
                         src={featuredProduct.images[0]}
@@ -300,9 +300,9 @@ export default async function HomePage() {
                     </div>
                   </div>
 
-                  <div className="px-2 pb-2 pt-5 sm:px-4 lg:py-4">
+                  <div className="px-2 pb-2 pt-4 sm:px-4 sm:pt-5 lg:py-4">
                     <p className="section-kicker text-[0.7rem]">Made with care</p>
-                    <h3 className="mt-4 font-display text-3xl font-semibold leading-tight text-ink sm:text-[2.6rem]">
+                    <h3 className="mt-3 font-display text-[2rem] font-semibold leading-tight text-ink sm:mt-4 sm:text-[2.6rem]">
                       {featuredProduct.title}
                     </h3>
                     <p className="mt-4 text-base leading-relaxed text-muted">

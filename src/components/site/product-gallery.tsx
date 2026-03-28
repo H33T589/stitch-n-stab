@@ -33,7 +33,7 @@ export function ProductGallery({ images, title }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative aspect-square overflow-hidden rounded-[1.75rem] bg-warm-bg ring-1 ring-white/80">
+      <div className="relative aspect-[0.96] overflow-hidden rounded-[1.45rem] bg-warm-bg ring-1 ring-white/80 sm:aspect-square sm:rounded-[1.75rem]">
         <Image
           src={images[active]}
           alt={`${title} - photo ${active + 1}`}
@@ -42,19 +42,19 @@ export function ProductGallery({ images, title }: Props) {
           sizes="(min-width: 1024px) 40rem, 100vw"
         />
 
-        <div className="absolute left-4 top-4 rounded-full bg-ink/70 px-3 py-1 text-xs font-semibold tracking-[0.18em] text-white backdrop-blur-sm">
+        <div className="absolute left-3 top-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white backdrop-blur-sm sm:left-4 sm:top-4 sm:px-3 sm:text-xs sm:tracking-[0.18em]">
           {active + 1} / {images.length}
         </div>
       </div>
 
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-1">
+        <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 sm:mx-0 sm:gap-3 sm:px-0">
           {images.map((src, i) => (
             <button
               key={src}
               type="button"
               onClick={() => setActive(i)}
-              className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-[1rem] transition-all duration-200 ${
+              className={`relative h-[4.5rem] w-[4.5rem] snap-start flex-shrink-0 overflow-hidden rounded-[0.95rem] transition-all duration-200 sm:h-20 sm:w-20 sm:rounded-[1rem] ${
                 i === active
                   ? "scale-[1.02] ring-2 ring-accent ring-offset-2 ring-offset-canvas"
                   : "opacity-75 ring-1 ring-line hover:opacity-100 hover:ring-stitch"

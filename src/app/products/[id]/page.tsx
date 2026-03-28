@@ -43,7 +43,7 @@ export default async function ProductPage({
         <div className="page-section">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-accent"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-accent"
           >
             <svg
               className="h-4 w-4"
@@ -61,19 +61,19 @@ export default async function ProductPage({
             Back to all products
           </Link>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-start xl:gap-8">
-            <div className="panel-surface rounded-[2rem] p-4 sm:p-5 lg:sticky lg:top-8">
+          <div className="mt-5 grid gap-5 lg:mt-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-start xl:gap-8">
+            <div className="panel-surface rounded-[1.6rem] p-3 sm:rounded-[2rem] sm:p-5 lg:sticky lg:top-8">
               <ProductGallery images={images} title={product.title} />
             </div>
 
-            <div className="space-y-5">
-              <section className="panel-surface rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
+            <div className="space-y-4 sm:space-y-5">
+              <section className="panel-surface rounded-[1.6rem] px-5 py-6 sm:rounded-[2rem] sm:px-8 sm:py-8">
                 <p className="section-kicker">Elaine&apos;s latest piece</p>
-                <h1 className="mt-4 font-display text-[2.5rem] font-semibold leading-[0.96] text-ink sm:text-[3.3rem]">
+                <h1 className="mt-4 font-display text-[2.05rem] font-semibold leading-[1.02] text-ink sm:text-[3.3rem] sm:leading-[0.96]">
                   {product.title}
                 </h1>
 
-                <div className="mt-5 flex flex-wrap items-center gap-3">
+                <div className="mt-5 flex flex-col items-start gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
                   {product.price != null && (
                     <p className="rounded-full bg-accent-soft px-4 py-2 text-lg font-bold text-accent">
                       ${product.price.toFixed(2)}
@@ -106,7 +106,7 @@ export default async function ProductPage({
               </section>
 
               <section className="grid gap-4 sm:grid-cols-3">
-                <div className="panel-surface rounded-[1.6rem] px-5 py-5">
+                <div className="panel-surface rounded-[1.35rem] px-5 py-5 sm:rounded-[1.6rem]">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
                     Handmade
                   </p>
@@ -118,7 +118,7 @@ export default async function ProductPage({
                   </p>
                 </div>
 
-                <div className="panel-surface rounded-[1.6rem] px-5 py-5">
+                <div className="panel-surface rounded-[1.35rem] px-5 py-5 sm:rounded-[1.6rem]">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
                     Photos
                   </p>
@@ -130,7 +130,7 @@ export default async function ProductPage({
                   </p>
                 </div>
 
-                <div className="panel-surface rounded-[1.6rem] px-5 py-5">
+                <div className="panel-surface rounded-[1.35rem] px-5 py-5 sm:rounded-[1.6rem]">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
                     Listed
                   </p>
@@ -143,9 +143,9 @@ export default async function ProductPage({
                 </div>
               </section>
 
-              <section className="panel-surface rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
+              <section className="panel-surface rounded-[1.6rem] px-5 py-6 sm:rounded-[2rem] sm:px-8 sm:py-8">
                 <p className="section-kicker">Love this piece?</p>
-                <h2 className="mt-4 font-display text-3xl font-semibold text-ink">
+                <h2 className="mt-4 font-display text-[2rem] font-semibold text-ink sm:text-3xl">
                   Elaine would love to hear from you.
                 </h2>
                 <p className="mt-3 max-w-xl text-base leading-relaxed text-muted">
@@ -153,7 +153,10 @@ export default async function ProductPage({
                   or text directly. Instagram works too if that is easier.
                 </p>
 
-                <ContactActions className="mt-6" />
+                <ContactActions
+                  className="mt-6 flex-col sm:flex-row"
+                  buttonClassName="w-full justify-center sm:w-auto"
+                />
               </section>
             </div>
           </div>

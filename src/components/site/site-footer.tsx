@@ -5,7 +5,7 @@ export function SiteFooter() {
   return (
     <footer id="contact" className="mt-auto pb-8 pt-14 sm:pb-10 sm:pt-20">
       <div className="page-section">
-        <div className="panel-surface overflow-hidden rounded-[2rem] px-6 py-8 sm:px-8 sm:py-10">
+        <div className="panel-surface overflow-hidden rounded-[1.75rem] px-5 py-7 sm:rounded-[2rem] sm:px-8 sm:py-10">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="section-kicker">Get in touch</p>
@@ -29,8 +29,8 @@ export function SiteFooter() {
               </p>
 
               <ContactActions
-                className="mt-5"
-                buttonClassName="min-w-[11rem] sm:min-w-0"
+                className="mt-5 flex-col sm:flex-row"
+                buttonClassName="w-full justify-center sm:w-auto sm:min-w-0"
               />
             </div>
           </div>

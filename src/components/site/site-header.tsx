@@ -7,19 +7,19 @@ type Props = {
 
 export function SiteHeader({ linkWholeTitle = false }: Props) {
   const brand = (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
       <Image
         src="/stitch-n-stab-logo.svg"
         alt="Stitch 'N' Stab logo"
         width={220}
         height={168}
-        className="h-auto w-[170px] sm:w-[200px]"
+        className="h-auto w-[140px] sm:w-[200px]"
         priority
       />
 
       <div className="min-w-0">
         <p className="section-kicker">Funny and funky crochet</p>
-        <p className="mt-3 max-w-md text-base leading-relaxed text-muted sm:text-lg">
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-muted sm:text-lg">
           Bright handmade pieces from Elaine in British Columbia, with humor,
           charm, and just the right amount of weird.
         </p>
@@ -30,7 +30,7 @@ export function SiteHeader({ linkWholeTitle = false }: Props) {
   return (
     <header className="pt-5 sm:pt-8">
       <div className="page-section">
-        <div className="panel-surface relative overflow-hidden rounded-[2rem] px-5 py-5 sm:px-8 sm:py-7">
+        <div className="panel-surface relative overflow-hidden rounded-[1.6rem] px-4 py-4 sm:rounded-[2rem] sm:px-8 sm:py-7">
           <div className="hero-orb -left-10 top-4 h-28 w-28 bg-accent-soft" />
           <div className="hero-orb right-6 top-0 h-24 w-24 bg-[#fde7d7]" />
 
@@ -46,7 +46,7 @@ export function SiteHeader({ linkWholeTitle = false }: Props) {
               brand
             )}
 
-            <div className="flex flex-wrap gap-3 lg:justify-end">
+            <div className="grid w-full grid-cols-1 gap-3 sm:flex sm:w-auto sm:flex-wrap lg:justify-end">
               <Link
                 href={linkWholeTitle ? "/" : "#catalog"}
                 className="button-secondary"

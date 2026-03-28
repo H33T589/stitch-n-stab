@@ -59,7 +59,7 @@ body::before {
 }
 
 .page-section {
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1120px, calc(100% - 1.5rem));
   margin-inline: auto;
 }
 
@@ -118,6 +118,7 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 0.65rem;
+  width: 100%;
   min-height: 3rem;
   padding: 0.85rem 1.35rem;
   border-radius: 999px;
@@ -196,5 +197,16 @@ body::before {
   .button-primary,
   .button-secondary {
     transition: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .page-section {
+    width: min(1120px, calc(100% - 2rem));
+  }
+
+  .button-primary,
+  .button-secondary {
+    width: auto;
   }
 }
