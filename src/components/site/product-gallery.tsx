@@ -71,7 +71,7 @@ export function ProductGallery({ images, title }: Props) {
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-[4/5] items-center justify-center rounded-[1.45rem] bg-warm-bg sm:aspect-square sm:rounded-[1.75rem]">
+      <div className="flex aspect-[4/5] items-center justify-center rounded-xl bg-warm-bg sm:aspect-square">
         <svg
           className="h-16 w-16 text-muted/30"
           fill="none"
@@ -95,7 +95,7 @@ export function ProductGallery({ images, title }: Props) {
         <button
           type="button"
           onClick={() => setIsViewerOpen(true)}
-          className="group relative block aspect-[4/5] overflow-hidden rounded-[1.45rem] bg-[#fffaf4] ring-1 ring-white/80 sm:aspect-square sm:rounded-[1.75rem]"
+          className="group relative block aspect-[4/5] overflow-hidden rounded-xl border border-line bg-canvas sm:aspect-square"
           aria-label="Open full-screen photo viewer"
         >
           <Image
@@ -106,12 +106,12 @@ export function ProductGallery({ images, title }: Props) {
             sizes="(min-width: 1024px) 40rem, 100vw"
           />
 
-          <div className="absolute left-3 top-3 rounded-full bg-ink/70 px-2.5 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white backdrop-blur-sm sm:left-4 sm:top-4 sm:px-3 sm:text-xs sm:tracking-[0.18em]">
+          <div className="absolute left-3 top-3 rounded-md bg-ink/75 px-2 py-1 text-[0.625rem] font-medium tabular-nums text-white sm:left-3.5 sm:top-3.5 sm:px-2.5 sm:text-xs">
             {active + 1} / {images.length}
           </div>
 
-          <div className="absolute bottom-3 right-3 rounded-full bg-paper/90 px-3 py-1 text-[0.65rem] font-semibold tracking-[0.14em] text-ink shadow-sm sm:text-xs">
-            Tap for full photo
+          <div className="absolute bottom-3 right-3 rounded-md border border-line bg-paper/95 px-2.5 py-1 text-[0.625rem] font-medium text-ink shadow-sm sm:text-xs">
+            Full screen
           </div>
         </button>
 
@@ -122,10 +122,10 @@ export function ProductGallery({ images, title }: Props) {
                 key={src}
                 type="button"
                 onClick={() => setActive(i)}
-                className={`relative h-[4.5rem] w-[4.5rem] snap-start flex-shrink-0 overflow-hidden rounded-[0.95rem] transition-all duration-200 sm:h-20 sm:w-20 sm:rounded-[1rem] ${
+                className={`relative h-[4.5rem] w-[4.5rem] snap-start flex-shrink-0 overflow-hidden rounded-lg transition-opacity duration-150 sm:h-20 sm:w-20 ${
                   i === active
-                    ? "scale-[1.02] ring-2 ring-accent ring-offset-2 ring-offset-canvas"
-                    : "opacity-75 ring-1 ring-line hover:opacity-100 hover:ring-stitch"
+                    ? "ring-2 ring-accent ring-offset-2 ring-offset-paper opacity-100"
+                    : "opacity-70 ring-1 ring-line hover:opacity-100"
                 }`}
                 aria-label={`Show photo ${i + 1}`}
               >

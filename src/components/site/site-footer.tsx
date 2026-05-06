@@ -3,29 +3,25 @@ import { ContactActions } from "@/components/site/contact-actions";
 
 export function SiteFooter() {
   return (
-    <footer id="contact" className="mt-auto pb-8 pt-14 sm:pb-10 sm:pt-20">
+    <footer id="contact" className="mt-auto border-t border-line bg-paper pb-8 pt-12 sm:pb-10 sm:pt-16">
       <div className="page-section">
-        <div className="panel-surface overflow-hidden rounded-[1.75rem] px-5 py-7 sm:rounded-[2rem] sm:px-8 sm:py-10">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div className="panel-surface overflow-hidden rounded-xl px-5 py-8 sm:rounded-2xl sm:px-8 sm:py-10">
+          <div className="grid gap-10 lg:grid-cols-[1fr_0.95fr] lg:items-start">
             <div>
-              <p className="section-kicker">Get in touch</p>
-              <h2 className="mt-4 max-w-xl font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
-                See something you love? Elaine is easy to reach.
+              <p className="section-kicker">Contact</p>
+              <h2 className="mt-3 max-w-xl font-display text-2xl font-semibold leading-snug text-ink sm:text-3xl">
+                Questions or interested in a piece? Reach out directly.
               </h2>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
-                Every piece is handmade, one of a kind, and usually carrying a
-                little humor with it too. Call, text, or say hello on
-                Instagram.
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted">
+                Handmade, one-of-a-kind work. For availability, use phone, text,
+                or Instagram.
               </p>
             </div>
 
-            <div className="rounded-[1.75rem] bg-warm-bg/70 p-5 ring-1 ring-white/70 sm:p-6">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                Reach Elaine
-              </p>
+            <div className="rounded-xl border border-line bg-canvas/50 p-5 sm:p-6">
+              <p className="text-sm font-semibold text-ink">How to reach Elaine</p>
               <p className="mt-2 text-sm leading-relaxed text-muted">
-                Fastest option: text or call directly. Instagram is there too if
-                that is easier.
+                Phone or text is usually fastest. Instagram works too.
               </p>
 
               <ContactActions
@@ -39,13 +35,13 @@ export function SiteFooter() {
 
           <div className="flex flex-col gap-3 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
             <p>
-              Handmade in British Columbia by Elaine, with color, humor, and a
-              lot of yarn.
+              Handmade in British Columbia · Stitch-n-Stab · affiliated with
+              Forever Crocheting
             </p>
 
             <Link
               href="/admin/login"
-              className="w-fit text-xs uppercase tracking-[0.18em] text-muted/55 transition-colors hover:text-muted"
+              className="w-fit text-xs tracking-wide text-muted/70 transition-colors hover:text-muted"
               aria-label="Admin sign in"
             >
               &copy; {new Date().getFullYear()} Stitch-n-Stab

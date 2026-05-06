@@ -58,25 +58,23 @@ type ProductCardProps = {
     price: number | null;
     images: string[];
   };
-  index: number;
 };
 
-function ProductCard({ product, index }: ProductCardProps) {
+function ProductCard({ product }: ProductCardProps) {
   const price = formatPrice(product.price);
 
   return (
     <Link
       href={`/products/${product.id}`}
-      className="group animate-fade-in-up panel-surface block overflow-hidden rounded-[1.55rem] p-3 transition duration-300 hover:-translate-y-1.5 sm:rounded-[1.85rem]"
-      style={{ animationDelay: `${index * 70}ms` }}
+      className="group panel-surface block overflow-hidden rounded-xl p-2.5 transition-shadow duration-200 hover:shadow-md sm:rounded-2xl sm:p-3"
     >
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[1.2rem] bg-warm-bg sm:aspect-[0.94] sm:rounded-[1.4rem]">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-warm-bg sm:aspect-[0.92]">
         {product.images[0] ? (
           <Image
             src={product.images[0]}
             alt={product.title}
             fill
-            className="object-cover transition duration-500 group-hover:scale-[1.04]"
+            className="object-cover transition duration-300 group-hover:scale-[1.02]"
             sizes="(min-width: 1280px) 18rem, (min-width: 768px) 30vw, 50vw"
           />
         ) : (
@@ -86,35 +84,35 @@ function ProductCard({ product, index }: ProductCardProps) {
         )}
 
         {product.sold && (
-          <div className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[0.66rem] font-bold uppercase tracking-[0.22em] text-white shadow-sm">
+          <div className="absolute left-2.5 top-2.5 rounded-md bg-ink px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-wider text-white">
             Sold
           </div>
         )}
 
         {product.images.length > 1 && (
-          <div className="absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-full bg-ink/68 px-2.5 py-1 text-[0.68rem] font-semibold text-white backdrop-blur-sm">
+          <div className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 rounded-md bg-ink/80 px-2 py-1 text-[0.625rem] font-medium text-white">
             <CameraIcon />
-            {product.images.length} views
+            {product.images.length} photos
           </div>
         )}
       </div>
 
-      <div className="px-1 pb-1 pt-4">
-        <p className="section-kicker text-[0.68rem]">One of a kind</p>
+      <div className="px-0.5 pb-1 pt-3.5">
+        <p className="section-kicker">Unique piece</p>
 
-        <div className="mt-3 flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-          <h2 className="max-w-[15rem] font-display text-[1.08rem] font-semibold leading-tight text-ink transition-colors group-hover:text-accent sm:text-[1.35rem]">
+        <div className="mt-2 flex flex-col items-start gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+          <h2 className="max-w-[15rem] font-display text-lg font-semibold leading-snug text-ink group-hover:text-accent sm:text-xl">
             {product.title}
           </h2>
           {price && (
-            <p className="rounded-full bg-accent-soft px-3 py-1 text-sm font-bold text-accent">
+            <p className="shrink-0 text-base font-semibold tabular-nums text-ink">
               {price}
             </p>
           )}
         </div>
 
         {product.description && (
-          <p className="mt-3 hidden line-clamp-2 text-sm leading-relaxed text-muted sm:block">
+          <p className="mt-2 hidden line-clamp-2 text-sm leading-relaxed text-muted sm:block">
             {product.description}
           </p>
         )}
@@ -153,124 +151,122 @@ export default async function HomePage() {
       <SiteHeader />
 
       <main className="flex-1">
-        <section className="page-section pb-10 pt-5 sm:pb-14 sm:pt-8">
-          <div className="grid gap-6 lg:grid-cols-[1.02fr_0.98fr] lg:items-center">
+        <section className="page-section pb-10 pt-6 sm:pb-14 sm:pt-10">
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12">
             <div className="animate-fade-in-up">
-              <p className="section-kicker">Bright and cheeky crochet</p>
-              <h1 className="mt-5 font-display text-[2.5rem] font-semibold leading-[0.98] text-ink sm:mt-6 sm:text-[4.1rem] lg:mt-7 lg:text-[4.95rem]">
-                <span className="block">Bright, funny, funky</span>
-                <span className="block">crochet by Elaine.</span>
+              <p className="section-kicker">Stitch-n-Stab</p>
+              <h1 className="mt-4 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[3.25rem]">
+                Handmade crochet, one piece at a time.
               </h1>
-              <p className="mt-5 max-w-[41rem] text-[0.98rem] leading-[1.68] text-muted sm:mt-7 sm:text-[1.22rem]">
-                From cheeky little cacti to playful creatures and creative
-                oddballs, Elaine makes handmade crochet with real grandma
-                energy and a wicked sense of humor. Every piece is stitched in
-                British Columbia and made to make somebody smile.
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
+                Original crochet work by Elaine in British Columbia. The catalog
+                below is updated as new pieces are finished—each listing is
+                unique, not factory-made.
               </p>
 
-              <div className="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap">
+              <div className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <Link href="#catalog" className="button-primary">
-                  Browse the collection
+                  View catalog
                 </Link>
                 <Link href="#contact" className="button-secondary">
-                  Talk to Elaine
+                  Get in touch
                 </Link>
               </div>
 
-              <div className="mt-8 grid grid-cols-1 gap-3 text-sm sm:mt-9 sm:flex sm:flex-wrap">
-                <div className="rounded-full bg-paper/80 px-4 py-2 font-semibold text-ink ring-1 ring-white/80">
-                  {catalog.length} published piece{catalog.length === 1 ? "" : "s"}
-                </div>
-                <div className="rounded-full bg-paper/80 px-4 py-2 font-semibold text-ink ring-1 ring-white/80">
-                  {availableCount} available right now
-                </div>
-                <div className="rounded-full bg-paper/80 px-4 py-2 font-semibold text-ink ring-1 ring-white/80">
-                  Handmade in BC
-                </div>
-              </div>
+              <p className="mt-8 text-sm text-muted">
+                <span className="font-medium text-ink">
+                  {catalog.length} listing{catalog.length === 1 ? "" : "s"}
+                </span>
+                <span className="mx-2 text-line">·</span>
+                <span className="font-medium text-ink">
+                  {availableCount} available
+                </span>
+                <span className="mx-2 text-line">·</span>
+                BC, Canada
+              </p>
             </div>
 
-            <div className="animate-fade-in-up panel-surface relative overflow-hidden rounded-[1.65rem] p-4 sm:rounded-[2.2rem] sm:p-6">
-              <div className="hero-orb -right-8 bottom-6 h-32 w-32 bg-accent-soft" />
-              <div className="hero-orb left-12 top-10 h-20 w-20 bg-[#fde0cb]" />
-
-              <div className="relative aspect-[1.08] sm:aspect-[1.03]">
-                {heroImages.length > 0 ? (
-                  <>
-                    <div className="absolute inset-x-0 top-0 h-[70%] overflow-hidden rounded-[1.3rem] bg-warm-bg shadow-[0_20px_45px_rgba(94,53,43,0.14)] sm:inset-x-[10%] sm:h-[68%] sm:rounded-[1.8rem] sm:shadow-[0_28px_60px_rgba(94,53,43,0.14)]">
-                      <Image
-                        src={heroImages[0].src}
-                        alt={heroImages[0].title}
-                        fill
-                        className="object-cover"
-                        sizes="(min-width: 1024px) 28rem, 100vw"
-                      />
-                    </div>
-                    {heroImages[1] && (
-                      <div className="absolute bottom-[18%] left-0 hidden h-[42%] w-[42%] overflow-hidden rounded-[1.5rem] bg-paper shadow-[0_22px_48px_rgba(94,53,43,0.12)] ring-8 ring-[#fff8f3] sm:block">
-                        <Image
-                          src={heroImages[1].src}
-                          alt={heroImages[1].title}
-                          fill
-                          className="object-cover"
-                          sizes="(min-width: 1024px) 12rem, 40vw"
-                        />
-                      </div>
-                    )}
-                    {heroImages[2] && (
-                      <div className="absolute inset-x-0 bottom-0 rounded-[1.25rem] bg-[#fff8f1]/96 p-4 shadow-[0_18px_36px_rgba(94,53,43,0.12)] sm:inset-x-auto sm:right-0 sm:h-[38%] sm:w-[48%] sm:rounded-[1.6rem] sm:bg-[#fff8f1] sm:shadow-[0_22px_48px_rgba(94,53,43,0.12)]">
-                        <p className="section-kicker text-[0.65rem]">Elaine&apos;s touch</p>
-                        <p className="mt-3 font-display text-lg font-semibold text-ink sm:text-xl">
-                          Handmade, hilarious, and impossible to mass-produce.
-                        </p>
-                        <p className="mt-2 text-sm leading-relaxed text-muted">
-                          The best pieces have personality, a little attitude,
-                          and a lot of charm.
-                        </p>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center rounded-[1.8rem] bg-warm-bg px-8 text-center">
-                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
-                      <PlaceholderIcon />
-                    </div>
-                    <p className="font-display text-2xl font-semibold text-ink">
-                      Fresh pieces are on the hook.
-                    </p>
-                    <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
-                      Elaine is working on the next batch of funny, funky
-                      creations. Check back soon or reach out directly.
-                    </p>
+            <div className="animate-fade-in-up panel-surface overflow-hidden rounded-xl p-3 sm:rounded-2xl sm:p-4">
+              {heroImages.length > 0 ? (
+                <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+                  <div className="relative aspect-[4/5] min-h-[14rem] flex-1 overflow-hidden rounded-lg bg-warm-bg sm:aspect-[3/4]">
+                    <Image
+                      src={heroImages[0].src}
+                      alt={heroImages[0].title}
+                      fill
+                      className="object-cover"
+                      sizes="(min-width: 1024px) 26rem, 100vw"
+                      priority
+                    />
                   </div>
-                )}
-              </div>
+                  {(heroImages[1] || heroImages[2]) && (
+                    <div className="flex flex-row gap-3 sm:w-[34%] sm:flex-col sm:justify-stretch">
+                      {heroImages[1] && (
+                        <div className="relative aspect-square flex-1 overflow-hidden rounded-lg bg-warm-bg sm:min-h-0 sm:flex-1">
+                          <Image
+                            src={heroImages[1].src}
+                            alt={heroImages[1].title}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 1024px) 12rem, 40vw"
+                          />
+                        </div>
+                      )}
+                      {heroImages[2] && (
+                        <div className="relative aspect-square flex-1 overflow-hidden rounded-lg bg-warm-bg sm:min-h-0 sm:flex-1">
+                          <Image
+                            src={heroImages[2].src}
+                            alt={heroImages[2].title}
+                            fill
+                            className="object-cover"
+                            sizes="(min-width: 1024px) 12rem, 40vw"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex min-h-[16rem] flex-col items-center justify-center rounded-lg bg-warm-bg px-8 py-12 text-center">
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg border border-line bg-paper text-muted">
+                    <PlaceholderIcon />
+                  </div>
+                  <p className="font-display text-xl font-semibold text-ink">
+                    New work coming soon
+                  </p>
+                  <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">
+                    Listings will appear here when pieces are published. Contact
+                    Elaine if you would like to hear when the shop updates.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </section>
 
         <section id="catalog" className="page-section pb-14 sm:pb-20">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-4 border-b border-line pb-8 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="section-kicker">Shop the catalog</p>
-              <h2 className="mt-4 font-display text-3xl font-semibold text-ink sm:text-4xl">
-                Fresh off Elaine&apos;s crochet hook.
+              <p className="section-kicker">Catalog</p>
+              <h2 className="mt-3 font-display text-2xl font-semibold text-ink sm:text-3xl">
+                Current pieces
               </h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-muted sm:text-right">
-              Browse the latest bright, funny, one-of-a-kind pieces. If
-              something makes you laugh or catches your eye, grab it quickly.
+              Availability changes as pieces sell. Open a listing for photos
+              and details, then use contact below to inquire.
             </p>
           </div>
 
           {catalog.length === 0 ? (
-            <div className="panel-surface mt-8 rounded-[2rem] px-6 py-16 text-center sm:px-10">
-              <p className="font-display text-2xl font-semibold text-ink sm:text-3xl">
-                New pieces are coming soon.
+            <div className="panel-surface mt-8 rounded-xl px-6 py-14 text-center sm:rounded-2xl sm:px-10">
+              <p className="font-display text-xl font-semibold text-ink sm:text-2xl">
+                No listings yet
               </p>
               <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-muted sm:text-base">
-                Elaine is working on something lovely right now. Reach out below
-                if you want first dibs when the next creation is ready.
+                The catalog will show new work here once it is published. Use
+                the contact section if you would like to reach out in the
+                meantime.
               </p>
             </div>
           ) : (
@@ -278,15 +274,15 @@ export default async function HomePage() {
               {featuredProduct && (
                 <Link
                   href={`/products/${featuredProduct.id}`}
-                  className="group panel-surface mt-8 grid overflow-hidden rounded-[1.65rem] p-3 transition duration-300 hover:-translate-y-1.5 sm:rounded-[2.1rem] sm:p-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-6"
+                  className="group panel-surface mt-8 grid overflow-hidden rounded-xl p-3 transition-shadow duration-200 hover:shadow-md sm:rounded-2xl sm:p-4 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-8"
                 >
-                  <div className="relative min-h-[16rem] overflow-hidden rounded-[1.35rem] bg-warm-bg sm:min-h-[25rem] sm:rounded-[1.7rem]">
+                  <div className="relative min-h-[16rem] overflow-hidden rounded-lg bg-warm-bg sm:min-h-[22rem]">
                     {featuredProduct.images[0] ? (
                       <Image
                         src={featuredProduct.images[0]}
                         alt={featuredProduct.title}
                         fill
-                        className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                        className="object-cover transition duration-300 group-hover:scale-[1.02]"
                         sizes="(min-width: 1024px) 36rem, 100vw"
                       />
                     ) : (
@@ -295,40 +291,40 @@ export default async function HomePage() {
                       </div>
                     )}
 
-                    <div className="absolute left-4 top-4 rounded-full bg-paper/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.22em] text-accent shadow-sm">
-                      Spotlight piece
+                    <div className="absolute left-3 top-3 rounded-md bg-paper/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-ink shadow-sm ring-1 ring-line">
+                      Featured
                     </div>
                   </div>
 
-                  <div className="px-2 pb-2 pt-4 sm:px-4 sm:pt-5 lg:py-4">
-                    <p className="section-kicker text-[0.7rem]">Made with care</p>
-                    <h3 className="mt-3 font-display text-[2rem] font-semibold leading-tight text-ink sm:mt-4 sm:text-[2.6rem]">
+                  <div className="px-1 pb-1 pt-4 sm:px-2 sm:pt-5 lg:py-4">
+                    <p className="section-kicker">Highlight</p>
+                    <h3 className="mt-2 font-display text-2xl font-semibold leading-snug text-ink sm:text-3xl">
                       {featuredProduct.title}
                     </h3>
                     <p className="mt-4 text-base leading-relaxed text-muted">
                       {featuredProduct.description ||
-                        "A bright little oddball from Elaine's latest collection."}
+                        "Details and more photos on the product page."}
                     </p>
 
-                    <div className="mt-6 flex flex-wrap items-center gap-3">
+                    <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                       {formatPrice(featuredProduct.price) && (
-                        <span className="rounded-full bg-accent-soft px-4 py-2 text-base font-bold text-accent">
+                        <span className="text-lg font-semibold tabular-nums text-ink">
                           {formatPrice(featuredProduct.price)}
                         </span>
                       )}
-                      <span className="rounded-full bg-[#fff4ea] px-4 py-2 text-sm font-semibold text-ink">
-                        {featuredProduct.sold ? "Already sold" : "Available now"}
+                      <span className="text-muted">
+                        {featuredProduct.sold ? "Sold" : "Available"}
                       </span>
-                      <span className="rounded-full bg-[#f6efe8] px-4 py-2 text-sm font-semibold text-muted">
+                      <span className="text-muted">
                         {featuredProduct.images.length} photo
                         {featuredProduct.images.length === 1 ? "" : "s"}
                       </span>
                     </div>
 
-                    <div className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent">
-                      See full details
+                    <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent">
+                      View listing
                       <svg
-                        className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                        className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -347,8 +343,8 @@ export default async function HomePage() {
 
               {remainingProducts.length > 0 && (
                 <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
-                  {remainingProducts.map((product, index) => (
-                    <ProductCard key={product.id} product={product} index={index} />
+                  {remainingProducts.map((product) => (
+                    <ProductCard key={product.id} product={product} />
                   ))}
                 </div>
               )}
@@ -360,9 +356,9 @@ export default async function HomePage() {
       <Link
         href="/admin/login"
         aria-label="Admin sign in"
-        className="fixed bottom-4 left-4 z-50 rounded-full bg-ink/82 px-4 py-2 text-xs font-semibold tracking-[0.18em] text-white opacity-45 shadow-[0_18px_50px_rgba(0,0,0,0.28)] ring-1 ring-white/15 backdrop-blur-sm transition hover:opacity-100"
+        className="fixed bottom-4 left-4 z-50 rounded-md border border-line bg-paper/95 px-3 py-1.5 text-xs font-medium text-muted shadow-sm backdrop-blur-sm transition hover:text-ink"
       >
-        Elaine
+        Admin
       </Link>
 
       <SiteFooter />

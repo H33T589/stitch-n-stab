@@ -50,27 +50,23 @@ export function ProductMetaCards({
 
   return (
     <section className="grid gap-4 sm:grid-cols-2">
-      <div className="panel-surface rounded-[1.35rem] px-5 py-5 sm:rounded-[1.6rem]">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-          Views
-        </p>
-        <p className="mt-2 font-display text-xl font-semibold text-ink">
+      <div className="panel-surface rounded-xl px-5 py-5 sm:rounded-2xl">
+        <p className="section-kicker">Page views</p>
+        <p className="mt-2 font-display text-xl font-semibold tabular-nums text-ink">
           {formatViewCount(viewCount)}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Total product-page opens from visitors.
+          How many times this listing has been opened.
         </p>
       </div>
 
-      <div className="panel-surface rounded-[1.35rem] px-5 py-5 sm:rounded-[1.6rem]">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
-          Listed
-        </p>
+      <div className="panel-surface rounded-xl px-5 py-5 sm:rounded-2xl">
+        <p className="section-kicker">Listed</p>
         <p className="mt-2 font-display text-xl font-semibold text-ink">
           {listedDate}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Reach out soon if this piece feels right.
+          Use contact on the home page to ask about this piece.
         </p>
       </div>
     </section>

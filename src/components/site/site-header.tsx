@@ -7,38 +7,38 @@ type Props = {
 
 export function SiteHeader({ linkWholeTitle = false }: Props) {
   const brand = (
-    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
       <Image
         src="/stitch-n-stab-logo.svg"
         alt="Stitch 'N' Stab logo"
         width={220}
         height={168}
-        className="h-auto w-[140px] sm:w-[200px]"
+        className="h-auto w-[128px] sm:w-[176px]"
         priority
       />
 
-      <div className="min-w-0">
-        <p className="section-kicker">Funny and funky crochet</p>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-muted sm:text-lg">
-          Bright handmade pieces from Elaine in British Columbia, with humor,
-          charm, and just the right amount of weird.
+      <div className="min-w-0 border-l-0 sm:border-l sm:border-line sm:pl-6">
+        <p className="section-kicker">Handmade crochet</p>
+        <p className="mt-2 max-w-md text-sm leading-relaxed text-muted sm:text-base">
+          Original pieces by Elaine, made in British Columbia. Each listing is
+          one of a kind.
+        </p>
+        <p className="mt-2.5 text-xs text-muted sm:text-sm">
+          Affiliated with Forever Crocheting.
         </p>
       </div>
     </div>
   );
 
   return (
-    <header className="pt-5 sm:pt-8">
-      <div className="page-section">
-        <div className="panel-surface relative overflow-hidden rounded-[1.6rem] px-4 py-4 sm:rounded-[2rem] sm:px-8 sm:py-7">
-          <div className="hero-orb -left-10 top-4 h-28 w-28 bg-accent-soft" />
-          <div className="hero-orb right-6 top-0 h-24 w-24 bg-[#fde7d7]" />
-
+    <header className="border-b border-line bg-paper/80 pt-5 backdrop-blur-sm sm:pt-8">
+      <div className="page-section pb-5 sm:pb-7">
+        <div className="panel-surface relative overflow-hidden rounded-xl px-4 py-5 sm:rounded-2xl sm:px-8 sm:py-6">
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             {linkWholeTitle ? (
               <Link
                 href="/"
-                className="rounded-[1.5rem] transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+                className="rounded-lg transition-opacity hover:opacity-85 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
               >
                 {brand}
               </Link>
@@ -46,22 +46,18 @@ export function SiteHeader({ linkWholeTitle = false }: Props) {
               brand
             )}
 
-            <div className="grid w-full grid-cols-1 gap-3 sm:flex sm:w-auto sm:flex-wrap lg:justify-end">
+            <div className="grid w-full grid-cols-1 gap-2.5 sm:flex sm:w-auto sm:flex-wrap lg:justify-end">
               <Link
                 href={linkWholeTitle ? "/" : "#catalog"}
                 className="button-secondary"
               >
-                {linkWholeTitle ? "Browse catalog" : "See the collection"}
+                {linkWholeTitle ? "Catalog" : "Collection"}
               </Link>
               <Link href="#contact" className="button-primary">
-                Contact Elaine
+                Contact
               </Link>
             </div>
           </div>
-        </div>
-
-        <div className="mx-auto mt-4 w-[min(94%,1040px)]">
-          <div className="thread-divider" />
         </div>
       </div>
     </header>

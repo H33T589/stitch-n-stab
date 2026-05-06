@@ -42,7 +42,7 @@ export default async function ProductPage({
           <div className="mb-4 flex items-start justify-between gap-4 sm:mb-6">
             <Link
               href="/"
-              className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-muted transition-colors hover:text-accent"
+              className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-ink"
             >
               <svg
                 className="h-4 w-4"
@@ -76,44 +76,40 @@ export default async function ProductPage({
             </Link>
           </div>
 
-          <div className="grid gap-5 lg:mt-2 lg:grid-cols-[1.02fr_0.98fr] lg:items-start xl:gap-8">
-            <div className="panel-surface rounded-[1.6rem] p-3 sm:rounded-[2rem] sm:p-5 lg:sticky lg:top-8">
+          <div className="grid gap-6 lg:mt-2 lg:grid-cols-[1.02fr_0.98fr] lg:items-start xl:gap-8">
+            <div className="panel-surface rounded-xl p-3 sm:rounded-2xl sm:p-4 lg:sticky lg:top-8">
               <ProductGallery images={images} title={product.title} />
             </div>
 
             <div className="space-y-4 sm:space-y-5">
-              <section className="panel-surface rounded-[1.6rem] px-5 py-6 sm:rounded-[2rem] sm:px-8 sm:py-8">
-                <p className="section-kicker">Elaine&apos;s latest piece</p>
-                <h1 className="mt-4 font-display text-[2.05rem] font-semibold leading-[1.02] text-ink sm:text-[3.3rem] sm:leading-[0.96]">
+              <section className="panel-surface rounded-xl px-5 py-6 sm:rounded-2xl sm:px-8 sm:py-8">
+                <p className="section-kicker">Product</p>
+                <h1 className="mt-3 font-display text-3xl font-semibold leading-tight text-ink sm:text-4xl">
                   {product.title}
                 </h1>
 
-                <div className="mt-5 flex flex-col items-start gap-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+                <div className="mt-5 flex flex-col gap-3 border-b border-line pb-5 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-6 sm:gap-y-2">
                   {product.price != null && (
-                    <p className="rounded-full bg-accent-soft px-4 py-2 text-lg font-bold text-accent">
+                    <p className="text-2xl font-semibold tabular-nums text-ink">
                       ${product.price.toFixed(2)}
                     </p>
                   )}
                   <span
-                    className={`rounded-full px-4 py-2 text-sm font-semibold ${
+                    className={`inline-flex w-fit rounded-md px-2.5 py-1 text-sm font-medium ${
                       product.sold
-                        ? "bg-accent text-white"
-                        : "bg-[#fff4ea] text-ink"
+                        ? "bg-ink text-white"
+                        : "border border-line bg-canvas text-ink"
                     }`}
                   >
-                    {product.sold ? "Already sold" : "Available right now"}
+                    {product.sold ? "Sold" : "Available"}
                   </span>
-                  <span className="rounded-full bg-[#f6efe8] px-4 py-2 text-sm font-semibold text-muted">
-                    One of a kind
-                  </span>
+                  <span className="text-sm text-muted">One of a kind</span>
                 </div>
 
                 {product.description && (
-                  <div className="mt-7 rounded-[1.5rem] bg-[#fff7f1] p-5 ring-1 ring-white/75">
-                    <p className="text-xs font-bold uppercase tracking-[0.22em] text-accent">
-                      About this piece
-                    </p>
-                    <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink/85">
+                  <div className="mt-6 border-t border-line pt-6">
+                    <p className="section-kicker">Description</p>
+                    <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink">
                       {product.description}
                     </p>
                   </div>
