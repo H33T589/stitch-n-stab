@@ -1,6 +1,6 @@
 "use client";
 
-import { createProduct } from "@/server/actions";
+import { updateProduct } from "@/server/actions";
 import { resizeImage } from "@/lib/admin-resize-image";
 import { useState, useRef } from "react";
 import NextImage from "next/image";
@@ -12,9 +12,20 @@ const MAX_PHOTOS = 6;
 
 type PhotoEntry = { file: File; preview: string };
 
-export default function NewProductPage() {
+export type EditProductInitial = {
+  id: string;
+  title: string;
+  description: string;
+  price: number | null;
+  compareAtPrice: number | null;
+  onSale: boolean;
+  imageUrls: string[];
+};
+
+export function EditProductForm({ product }: { product: EditProductInitial }) {
+  const [existingUrls, setExistingUrls] = useState<string[]>(product.imageUrls);
+  const [onSale, setOnSale] = useState(product.onSale);
   const [photos, setPhotos] = useState<PhotoEntry[]>([]);
-  const [onSale, setOnSale] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,8 +36,8 @@ export default function NewProductPage() {
     );
     if (incoming.length === 0) return;
 
+    const room = MAX_PHOTOS - existingUrls.length - photos.length;
     setPhotos((prev) => {
-      const room = MAX_PHOTOS - prev.length;
       const toAdd = incoming.slice(0, room).map((file) => ({
         file,
         preview: URL.createObjectURL(file),
@@ -36,7 +47,15 @@ export default function NewProductPage() {
     setError(null);
   }
 
-  function removePhoto(index: number) {
+  function removeExisting(index: number) {
+    setExistingUrls((prev) => {
+      const copy = [...prev];
+      copy.splice(index, 1);
+      return copy;
+    });
+  }
+
+  function removeNewPhoto(index: number) {
     setPhotos((prev) => {
       const copy = [...prev];
       URL.revokeObjectURL(copy[index].preview);
@@ -70,12 +89,16 @@ export default function NewProductPage() {
         onSale ? ((formData.get("compareAtPrice") as string) ?? "") : ""
       );
 
+      for (const url of existingUrls) {
+        resized.append("existingImages", url);
+      }
+
       for (const { file } of photos) {
         const compressed = await resizeImage(file);
         resized.append("images", compressed);
       }
 
-      await createProduct(resized);
+      await updateProduct(product.id, resized);
     } catch (err: unknown) {
       if (typeof err === "object" && err !== null && "digest" in err) {
         throw err;
@@ -89,7 +112,7 @@ export default function NewProductPage() {
     }
   }
 
-  const spotsLeft = MAX_PHOTOS - photos.length;
+  const spotsLeft = MAX_PHOTOS - existingUrls.length - photos.length;
 
   return (
     <div className="min-h-screen bg-canvas p-4 sm:p-6">
@@ -107,17 +130,17 @@ export default function NewProductPage() {
         <RotatingElaineGreeting />
 
         <h1 className="font-display text-2xl sm:text-3xl font-semibold text-ink mb-2">
-          Add new product
+          Edit listing
         </h1>
         <p className="text-muted text-sm mb-8">
-          Fill in the details and add up to {MAX_PHOTOS} photos.
+          Update details or photos (up to {MAX_PHOTOS} total). Add new images
+          anytime—existing photos stay unless you remove them.
         </p>
 
         <form
           action={handleSubmit}
           className="bg-paper border border-line rounded-2xl p-6 sm:p-8 shadow-sm ring-1 ring-black/[0.03] space-y-6"
         >
-          {/* Title */}
           <div>
             <label
               htmlFor="title"
@@ -130,12 +153,11 @@ export default function NewProductPage() {
               name="title"
               type="text"
               required
-              placeholder="e.g. Cozy bear amigurumi"
+              defaultValue={product.title}
               className="w-full px-4 py-3.5 border border-line rounded-xl text-lg bg-paper focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
             />
           </div>
 
-          {/* Description */}
           <div>
             <label
               htmlFor="description"
@@ -147,7 +169,7 @@ export default function NewProductPage() {
               id="description"
               name="description"
               rows={4}
-              placeholder="Tell customers about sizes, colours, care…"
+              defaultValue={product.description}
               className="w-full px-4 py-3.5 border border-line rounded-xl text-lg resize-none focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
             />
           </div>
@@ -196,10 +218,17 @@ export default function NewProductPage() {
                     type="number"
                     step="0.01"
                     min="0"
+                    key={`regular-${onSale}`}
+                    defaultValue={
+                      product.price != null ? String(product.price) : ""
+                    }
                     placeholder="0.00"
                     className="w-full pl-9 pr-4 py-3.5 border border-line rounded-xl text-lg bg-paper focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
                   />
                 </div>
+                <p className="mt-1.5 text-xs text-muted">
+                  Clear the field to remove price from the listing.
+                </p>
               </div>
             ) : (
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -221,6 +250,12 @@ export default function NewProductPage() {
                       step="0.01"
                       min="0"
                       required={onSale}
+                      key={`cmp-${onSale}`}
+                      defaultValue={
+                        product.compareAtPrice != null
+                          ? String(product.compareAtPrice)
+                          : ""
+                      }
                       placeholder="0.00"
                       className="w-full pl-9 pr-4 py-3.5 border border-line rounded-xl text-lg bg-paper focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
                     />
@@ -244,6 +279,10 @@ export default function NewProductPage() {
                       step="0.01"
                       min="0"
                       required={onSale}
+                      key={`sale-${onSale}`}
+                      defaultValue={
+                        product.price != null ? String(product.price) : ""
+                      }
                       placeholder="0.00"
                       className="w-full pl-9 pr-4 py-3.5 border border-line rounded-xl text-lg bg-paper focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
                     />
@@ -253,24 +292,22 @@ export default function NewProductPage() {
             )}
           </div>
 
-          {/* Photos */}
           <div>
             <div className="flex items-baseline justify-between mb-2">
               <label className="block text-sm font-medium text-ink">
                 Photos
               </label>
               <span className="text-xs text-muted">
-                {photos.length} / {MAX_PHOTOS}
+                {existingUrls.length + photos.length} / {MAX_PHOTOS}
               </span>
             </div>
 
-            {/* Preview grid */}
-            {photos.length > 0 && (
+            {(existingUrls.length > 0 || photos.length > 0) && (
               <div className="grid grid-cols-3 gap-3 mb-3">
-                {photos.map((entry, i) => (
-                  <div key={entry.preview} className="relative group/thumb">
+                {existingUrls.map((url, i) => (
+                  <div key={url} className="relative group/thumb">
                     <NextImage
-                      src={entry.preview}
+                      src={url}
                       alt={`Photo ${i + 1}`}
                       width={400}
                       height={400}
@@ -284,9 +321,44 @@ export default function NewProductPage() {
                     )}
                     <button
                       type="button"
-                      onClick={() => removePhoto(i)}
+                      onClick={() => removeExisting(i)}
                       className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-ink/60 text-white flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm hover:bg-red-600"
                       aria-label={`Remove photo ${i + 1}`}
+                    >
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+                {photos.map((entry, i) => (
+                  <div key={entry.preview} className="relative group/thumb">
+                    <NextImage
+                      src={entry.preview}
+                      alt={`New photo ${i + 1}`}
+                      width={400}
+                      height={400}
+                      unoptimized
+                      className="w-full aspect-square object-cover rounded-xl border border-line"
+                    />
+                    <span className="absolute bottom-1.5 left-1.5 bg-accent/90 text-white text-[0.55rem] font-semibold px-1.5 py-0.5 rounded-md">
+                      New
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => removeNewPhoto(i)}
+                      className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-ink/60 text-white flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition-opacity cursor-pointer backdrop-blur-sm hover:bg-red-600"
+                      aria-label={`Remove new photo ${i + 1}`}
                     >
                       <svg
                         className="w-3 h-3"
@@ -307,7 +379,6 @@ export default function NewProductPage() {
               </div>
             )}
 
-            {/* Drop zone / add button */}
             {spotsLeft > 0 && (
               <div
                 onDragOver={(e) => e.preventDefault()}
@@ -329,8 +400,8 @@ export default function NewProductPage() {
                   />
                 </svg>
                 <p className="text-sm font-medium text-muted">
-                  {photos.length === 0
-                    ? "Tap to choose photos"
+                  {existingUrls.length === 0 && photos.length === 0
+                    ? "Tap to add photos"
                     : `Add more (${spotsLeft} left)`}
                 </p>
                 <p className="text-xs text-muted/60 mt-1">
@@ -349,20 +420,18 @@ export default function NewProductPage() {
             />
           </div>
 
-          {/* Error */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
               {error}
             </div>
           )}
 
-          {/* Submit */}
           <button
             type="submit"
             disabled={isSubmitting}
             className="w-full min-h-14 py-3.5 bg-accent text-white text-lg font-semibold rounded-xl hover:bg-accent-hover disabled:opacity-50 transition-colors cursor-pointer shadow-sm"
           >
-            {isSubmitting ? "Compressing photos & saving…" : "Save product"}
+            {isSubmitting ? "Saving changes…" : "Save changes"}
           </button>
         </form>
       </div>

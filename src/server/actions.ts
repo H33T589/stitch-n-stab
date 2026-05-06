@@ -60,13 +60,40 @@ export async function logout() {
 
 const MAX_PHOTOS = 6;
 
+function parseProductPricing(formData: FormData) {
+  const onSale = formData.get("onSale") === "true";
+  const priceStr = (formData.get("price") as string)?.trim() ?? "";
+  const compareStr = (formData.get("compareAtPrice") as string)?.trim() ?? "";
+
+  const price = priceStr ? parseFloat(priceStr) : null;
+  const compareAtPrice = compareStr ? parseFloat(compareStr) : null;
+
+  if (onSale) {
+    if (price == null || Number.isNaN(price)) {
+      throw new Error("Sale price is required when the listing is on sale.");
+    }
+    if (compareAtPrice == null || Number.isNaN(compareAtPrice)) {
+      throw new Error("Original price is required when the listing is on sale.");
+    }
+    if (compareAtPrice <= price) {
+      throw new Error("Original price must be higher than the sale price.");
+    }
+    return { onSale: true, price, compareAtPrice };
+  }
+
+  return {
+    onSale: false,
+    price: price != null && !Number.isNaN(price) ? price : null,
+    compareAtPrice: null as number | null,
+  };
+}
+
 export async function createProduct(formData: FormData) {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
-  const priceStr = formData.get("price") as string;
   const files = formData.getAll("images") as File[];
 
-  const price = priceStr ? parseFloat(priceStr) : null;
+  const pricing = parseProductPricing(formData);
 
   const validFiles = files.filter((f) => f.size > 0).slice(0, MAX_PHOTOS);
   const imageUrls: string[] = [];
@@ -79,13 +106,69 @@ export async function createProduct(formData: FormData) {
     data: {
       title,
       description: description || "",
-      price: price && !isNaN(price) ? price : null,
+      price: pricing.price,
+      compareAtPrice: pricing.compareAtPrice,
+      onSale: pricing.onSale,
       imageUrls: JSON.stringify(imageUrls),
     },
   });
 
   revalidatePath("/");
   revalidatePath("/admin");
+  redirect("/admin");
+}
+
+export async function updateProduct(id: string, formData: FormData) {
+  const existing = await prisma.product.findUnique({ where: { id } });
+  if (!existing) {
+    throw new Error("Product not found");
+  }
+
+  const title = (formData.get("title") as string)?.trim() ?? "";
+  if (!title) {
+    throw new Error("Product name is required.");
+  }
+  const description = (formData.get("description") as string) ?? "";
+  const pricing = parseProductPricing(formData);
+
+  const keptUrls = formData
+    .getAll("existingImages")
+    .filter((v): v is string => typeof v === "string" && v.length > 0);
+
+  const files = formData.getAll("images").filter(
+    (f): f is File => f instanceof File && f.size > 0
+  );
+
+  if (keptUrls.length + files.length > MAX_PHOTOS) {
+    throw new Error(`Maximum ${MAX_PHOTOS} photos per listing.`);
+  }
+
+  const priorUrls: string[] = JSON.parse(existing.imageUrls);
+  const allowed = new Set(priorUrls);
+  const sanitizedKept = keptUrls.filter((url) => allowed.has(url));
+
+  const newUrls: string[] = [];
+  for (const file of files) {
+    newUrls.push(await saveUploadedImage(file));
+  }
+
+  const imageUrls = [...sanitizedKept, ...newUrls];
+
+  await prisma.product.update({
+    where: { id },
+    data: {
+      title,
+      description: description || "",
+      price: pricing.price,
+      compareAtPrice: pricing.compareAtPrice,
+      onSale: pricing.onSale,
+      imageUrls: JSON.stringify(imageUrls),
+    },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+  revalidatePath(`/products/${id}`);
   redirect("/admin");
 }
 

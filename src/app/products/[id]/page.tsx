@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductGallery } from "@/components/site/product-gallery";
+import { ListingPrice } from "@/components/site/listing-price";
 import { ProductMetaCards } from "@/components/site/product-meta-cards";
 import { SiteFooter } from "@/components/site/site-footer";
 import { prisma } from "@/server/db";
@@ -78,7 +79,11 @@ export default async function ProductPage({
 
           <div className="grid gap-6 lg:mt-2 lg:grid-cols-[1.02fr_0.98fr] lg:items-start xl:gap-8">
             <div className="panel-surface rounded-xl p-3 sm:rounded-2xl sm:p-4 lg:sticky lg:top-8">
-              <ProductGallery images={images} title={product.title} />
+              <ProductGallery
+                images={images}
+                title={product.title}
+                showSale={product.onSale && !product.sold}
+              />
             </div>
 
             <div className="space-y-4 sm:space-y-5">
@@ -88,12 +93,13 @@ export default async function ProductPage({
                   {product.title}
                 </h1>
 
-                <div className="mt-5 flex flex-col gap-3 border-b border-line pb-5 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-6 sm:gap-y-2">
-                  {product.price != null && (
-                    <p className="text-2xl font-semibold tabular-nums text-ink">
-                      ${product.price.toFixed(2)}
-                    </p>
-                  )}
+                <div className="mt-5 flex flex-col gap-3 border-b border-line pb-5 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-2">
+                  <ListingPrice
+                    price={product.price}
+                    compareAtPrice={product.compareAtPrice}
+                    onSale={product.onSale}
+                    size="lg"
+                  />
                   <span
                     className={`inline-flex w-fit rounded-md px-2.5 py-1 text-sm font-medium ${
                       product.sold

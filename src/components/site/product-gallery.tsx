@@ -2,13 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { SaleRibbon } from "@/components/site/sale-ribbon";
 
 type Props = {
   images: string[];
   title: string;
+  showSale?: boolean;
 };
 
-export function ProductGallery({ images, title }: Props) {
+export function ProductGallery({ images, title, showSale }: Props) {
   const [active, setActive] = useState(0);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const touchStartX = useRef<number | null>(null);
@@ -105,6 +107,8 @@ export function ProductGallery({ images, title }: Props) {
             className="object-contain transition duration-300 group-hover:scale-[1.01]"
             sizes="(min-width: 1024px) 40rem, 100vw"
           />
+
+          {showSale && <SaleRibbon />}
 
           <div className="absolute left-3 top-3 rounded-md bg-ink/75 px-2 py-1 text-[0.625rem] font-medium tabular-nums text-white sm:left-3.5 sm:top-3.5 sm:px-2.5 sm:text-xs">
             {active + 1} / {images.length}

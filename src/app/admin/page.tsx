@@ -27,7 +27,7 @@ export default async function AdminDashboard() {
                 Your products
               </p>
               <p className="text-muted text-sm mt-1">
-                Add, hide, mark sold, or remove listings.
+                Edit details and photos, or hide, mark sold, or remove listings.
               </p>
             </div>
 
@@ -95,6 +95,11 @@ export default async function AdminDashboard() {
                           ${product.price.toFixed(2)}
                         </span>
                       )}
+                      {product.onSale && !product.sold && (
+                        <span className="bg-accent text-white px-2 py-0.5 rounded-md text-xs font-bold uppercase tracking-wide">
+                          Sale
+                        </span>
+                      )}
                       {product.sold && (
                         <span className="bg-accent-soft text-accent px-2 py-0.5 rounded-full text-xs font-semibold uppercase">
                           Sold
@@ -109,6 +114,12 @@ export default async function AdminDashboard() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 flex-shrink-0 w-full sm:w-auto">
+                    <Link
+                      href={`/admin/products/${product.id}/edit`}
+                      className="min-h-11 px-4 text-sm font-medium bg-accent text-white border border-accent rounded-xl hover:bg-accent-hover transition-colors cursor-pointer inline-flex items-center justify-center"
+                    >
+                      Edit
+                    </Link>
                     <form action={toggleSold.bind(null, product.id)}>
                       <button
                         type="submit"

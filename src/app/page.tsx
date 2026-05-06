@@ -3,6 +3,8 @@ import Link from "next/link";
 import { prisma } from "@/server/db";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { SaleRibbon } from "@/components/site/sale-ribbon";
+import { ListingPrice } from "@/components/site/listing-price";
 
 export const dynamic = "force-dynamic";
 
@@ -36,10 +38,6 @@ function CameraIcon() {
   );
 }
 
-function formatPrice(price: number | null) {
-  return price == null ? null : `$${price.toFixed(2)}`;
-}
-
 function parseImageUrls(raw: string) {
   try {
     const parsed = JSON.parse(raw);
@@ -56,13 +54,13 @@ type ProductCardProps = {
     description: string;
     sold: boolean;
     price: number | null;
+    compareAtPrice: number | null;
+    onSale: boolean;
     images: string[];
   };
 };
 
 function ProductCard({ product }: ProductCardProps) {
-  const price = formatPrice(product.price);
-
   return (
     <Link
       href={`/products/${product.id}`}
@@ -84,13 +82,17 @@ function ProductCard({ product }: ProductCardProps) {
         )}
 
         {product.sold && (
-          <div className="absolute left-2.5 top-2.5 rounded-md bg-ink px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-wider text-white">
+          <div className="absolute left-2.5 top-2.5 z-10 rounded-md bg-ink px-2 py-1 text-[0.625rem] font-semibold uppercase tracking-wider text-white">
             Sold
           </div>
         )}
 
+        {product.onSale && !product.sold && product.price != null && (
+          <SaleRibbon />
+        )}
+
         {product.images.length > 1 && (
-          <div className="absolute bottom-2.5 right-2.5 inline-flex items-center gap-1 rounded-md bg-ink/80 px-2 py-1 text-[0.625rem] font-medium text-white">
+          <div className="absolute bottom-2.5 right-2.5 z-10 inline-flex items-center gap-1 rounded-md bg-ink/80 px-2 py-1 text-[0.625rem] font-medium text-white">
             <CameraIcon />
             {product.images.length} photos
           </div>
@@ -104,11 +106,12 @@ function ProductCard({ product }: ProductCardProps) {
           <h2 className="max-w-[15rem] font-display text-lg font-semibold leading-snug text-ink group-hover:text-accent sm:text-xl">
             {product.title}
           </h2>
-          {price && (
-            <p className="shrink-0 text-base font-semibold tabular-nums text-ink">
-              {price}
-            </p>
-          )}
+          <ListingPrice
+            price={product.price}
+            compareAtPrice={product.compareAtPrice}
+            onSale={product.onSale}
+            size="sm"
+          />
         </div>
 
         {product.description && (
@@ -291,9 +294,12 @@ export default async function HomePage() {
                       </div>
                     )}
 
-                    <div className="absolute left-3 top-3 rounded-md bg-paper/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-ink shadow-sm ring-1 ring-line">
+                    <div className="absolute left-3 top-3 z-10 rounded-md bg-paper/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-wide text-ink shadow-sm ring-1 ring-line">
                       Featured
                     </div>
+                    {featuredProduct.onSale &&
+                      !featuredProduct.sold &&
+                      featuredProduct.price != null && <SaleRibbon />}
                   </div>
 
                   <div className="px-1 pb-1 pt-4 sm:px-2 sm:pt-5 lg:py-4">
@@ -307,11 +313,12 @@ export default async function HomePage() {
                     </p>
 
                     <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                      {formatPrice(featuredProduct.price) && (
-                        <span className="text-lg font-semibold tabular-nums text-ink">
-                          {formatPrice(featuredProduct.price)}
-                        </span>
-                      )}
+                      <ListingPrice
+                        price={featuredProduct.price}
+                        compareAtPrice={featuredProduct.compareAtPrice}
+                        onSale={featuredProduct.onSale}
+                        size="sm"
+                      />
                       <span className="text-muted">
                         {featuredProduct.sold ? "Sold" : "Available"}
                       </span>
