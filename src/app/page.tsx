@@ -115,7 +115,7 @@ function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {product.description && (
-          <p className="mt-2 hidden line-clamp-2 text-sm leading-relaxed text-muted sm:block">
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">
             {product.description}
           </p>
         )}
@@ -136,35 +136,49 @@ export default async function HomePage() {
   }));
 
   const availableCount = catalog.filter((product) => !product.sold).length;
-  const featuredProduct = catalog.find((product) => !product.sold) ?? catalog[0] ?? null;
+
+  const markedFeatured = catalog.find(
+    (product) => product.featured && product.published
+  );
+  const featuredProduct =
+    markedFeatured ??
+    catalog.find((product) => !product.sold) ??
+    catalog[0] ??
+    null;
+
   const remainingProducts = featuredProduct
     ? catalog.filter((product) => product.id !== featuredProduct.id)
     : [];
-  const heroImages = catalog
-    .flatMap((product) =>
-      product.images.slice(0, 1).map((src) => ({
-        src,
-        title: product.title,
-      }))
-    )
-    .slice(0, 3);
+
+  const heroPreview =
+    featuredProduct?.images[0] != null
+      ? {
+          src: featuredProduct.images[0],
+          alt: featuredProduct.title,
+        }
+      : catalog[0]?.images[0] != null
+        ? {
+            src: catalog[0].images[0],
+            alt: catalog[0].title,
+          }
+        : null;
 
   return (
     <div className="site-shell flex min-h-screen flex-col">
       <SiteHeader />
 
       <main className="flex-1">
-        <section className="page-section pb-10 pt-6 sm:pb-14 sm:pt-10">
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12">
+        <section className="page-section pb-8 pt-6 sm:pb-12 sm:pt-10 lg:pb-14">
+          <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:gap-14">
             <div className="animate-fade-in-up">
               <p className="section-kicker">Stitch-n-Stab</p>
-              <h1 className="mt-4 font-display text-4xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-5xl lg:text-[3.25rem]">
+              <h1 className="mt-4 font-display text-[2.15rem] font-semibold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.1rem]">
                 Handmade crochet, one piece at a time.
               </h1>
-              <p className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
-                Original crochet work by Elaine in British Columbia. The catalog
-                below is updated as new pieces are finished—each listing is
-                unique, not factory-made.
+              <p className="mt-5 max-w-xl text-[0.98rem] leading-relaxed text-muted sm:text-lg">
+                Original crochet work by Elaine in British Columbia. Scroll to
+                the catalog for what&apos;s available—each piece is listed on
+                its own page with photos.
               </p>
 
               <div className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
@@ -176,7 +190,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <p className="mt-8 text-sm text-muted">
+              <p className="mt-8 text-sm leading-relaxed text-muted">
                 <span className="font-medium text-ink">
                   {catalog.length} listing{catalog.length === 1 ? "" : "s"}
                 </span>
@@ -189,66 +203,37 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="animate-fade-in-up panel-surface overflow-hidden rounded-xl p-3 sm:rounded-2xl sm:p-4">
-              {heroImages.length > 0 ? (
-                <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-                  <div className="relative aspect-[4/5] min-h-[14rem] flex-1 overflow-hidden rounded-lg bg-warm-bg sm:aspect-[3/4]">
+            {/* Desktop only: one preview image (matches homepage highlight when set). Mobile stays text-first to reduce visual clutter. */}
+            <div className="animate-fade-in-up hidden lg:block">
+              <div className="panel-surface overflow-hidden rounded-2xl p-4">
+                {heroPreview ? (
+                  <div className="relative aspect-[3/4] max-h-[min(520px,58vh)] overflow-hidden rounded-xl bg-warm-bg">
                     <Image
-                      src={heroImages[0].src}
-                      alt={heroImages[0].title}
+                      src={heroPreview.src}
+                      alt={heroPreview.alt}
                       fill
                       className="object-cover"
-                      sizes="(min-width: 1024px) 26rem, 100vw"
+                      sizes="(min-width: 1024px) 480px, 0px"
                       priority
                     />
                   </div>
-                  {(heroImages[1] || heroImages[2]) && (
-                    <div className="flex flex-row gap-3 sm:w-[34%] sm:flex-col sm:justify-stretch">
-                      {heroImages[1] && (
-                        <div className="relative aspect-square flex-1 overflow-hidden rounded-lg bg-warm-bg sm:min-h-0 sm:flex-1">
-                          <Image
-                            src={heroImages[1].src}
-                            alt={heroImages[1].title}
-                            fill
-                            className="object-cover"
-                            sizes="(min-width: 1024px) 12rem, 40vw"
-                          />
-                        </div>
-                      )}
-                      {heroImages[2] && (
-                        <div className="relative aspect-square flex-1 overflow-hidden rounded-lg bg-warm-bg sm:min-h-0 sm:flex-1">
-                          <Image
-                            src={heroImages[2].src}
-                            alt={heroImages[2].title}
-                            fill
-                            className="object-cover"
-                            sizes="(min-width: 1024px) 12rem, 40vw"
-                          />
-                        </div>
-                      )}
+                ) : (
+                  <div className="flex min-h-[280px] flex-col items-center justify-center rounded-xl bg-warm-bg px-8 py-12 text-center">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg border border-line bg-paper text-muted">
+                      <PlaceholderIcon />
                     </div>
-                  )}
-                </div>
-              ) : (
-                <div className="flex min-h-[16rem] flex-col items-center justify-center rounded-lg bg-warm-bg px-8 py-12 text-center">
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-lg border border-line bg-paper text-muted">
-                    <PlaceholderIcon />
+                    <p className="font-display text-lg font-semibold text-ink">
+                      New work coming soon
+                    </p>
                   </div>
-                  <p className="font-display text-xl font-semibold text-ink">
-                    New work coming soon
-                  </p>
-                  <p className="mt-2 max-w-sm text-sm leading-relaxed text-muted">
-                    Listings will appear here when pieces are published. Contact
-                    Elaine if you would like to hear when the shop updates.
-                  </p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </section>
 
         <section id="catalog" className="page-section pb-14 sm:pb-20">
-          <div className="flex flex-col gap-4 border-b border-line pb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div className="flex flex-col gap-4 border-b border-line pb-6 sm:flex-row sm:items-end sm:justify-between sm:pb-8">
             <div>
               <p className="section-kicker">Catalog</p>
               <h2 className="mt-3 font-display text-2xl font-semibold text-ink sm:text-3xl">
@@ -256,8 +241,8 @@ export default async function HomePage() {
               </h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-muted sm:text-right">
-              Availability changes as pieces sell. Open a listing for photos
-              and details, then use contact below to inquire.
+              Tap a piece for full photos and details. Availability updates as
+              pieces sell—use contact below to inquire.
             </p>
           </div>
 
@@ -277,9 +262,9 @@ export default async function HomePage() {
               {featuredProduct && (
                 <Link
                   href={`/products/${featuredProduct.id}`}
-                  className="group panel-surface mt-8 grid overflow-hidden rounded-xl p-3 transition-shadow duration-200 hover:shadow-md sm:rounded-2xl sm:p-4 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-8"
+                  className="group panel-surface mt-6 grid overflow-hidden rounded-xl p-3 transition-shadow duration-200 hover:shadow-md sm:mt-8 sm:rounded-2xl sm:p-4 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-8"
                 >
-                  <div className="relative min-h-[16rem] overflow-hidden rounded-lg bg-warm-bg sm:min-h-[22rem]">
+                  <div className="relative aspect-[4/5] min-h-[13rem] overflow-hidden rounded-lg bg-warm-bg sm:aspect-auto sm:min-h-[20rem] lg:min-h-[22rem]">
                     {featuredProduct.images[0] ? (
                       <Image
                         src={featuredProduct.images[0]}
@@ -307,7 +292,7 @@ export default async function HomePage() {
                     <h3 className="mt-2 font-display text-2xl font-semibold leading-snug text-ink sm:text-3xl">
                       {featuredProduct.title}
                     </h3>
-                    <p className="mt-4 text-base leading-relaxed text-muted">
+                    <p className="mt-4 line-clamp-4 text-base leading-relaxed text-muted sm:line-clamp-none">
                       {featuredProduct.description ||
                         "Details and more photos on the product page."}
                     </p>
@@ -349,7 +334,7 @@ export default async function HomePage() {
               )}
 
               {remainingProducts.length > 0 && (
-                <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
+                <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
                   {remainingProducts.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
@@ -363,7 +348,7 @@ export default async function HomePage() {
       <Link
         href="/admin/login"
         aria-label="Admin sign in"
-        className="fixed bottom-4 left-4 z-50 rounded-md border border-line bg-paper/95 px-3 py-1.5 text-xs font-medium text-muted shadow-sm backdrop-blur-sm transition hover:text-ink"
+        className="fixed bottom-4 right-4 z-50 rounded-md border border-line bg-paper/95 px-3 py-1.5 text-xs font-medium text-muted shadow-md backdrop-blur-sm transition hover:text-ink"
       >
         Admin
       </Link>

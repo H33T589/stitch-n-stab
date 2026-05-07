@@ -14,6 +14,7 @@ model Product {
   price           Float?
   compareAtPrice  Float?
   onSale          Boolean  @default(false)
+  featured        Boolean  @default(false)
   imageUrls       String   @default("[]")
   viewCount       Int      @default(0)
   sold            Boolean  @default(false)

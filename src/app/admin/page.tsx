@@ -4,6 +4,8 @@ import {
   deleteProduct,
   toggleSold,
   togglePublished,
+  setHomepageFeatured,
+  clearHomepageFeatured,
 } from "@/server/actions";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,7 +29,8 @@ export default async function AdminDashboard() {
                 Your products
               </p>
               <p className="text-muted text-sm mt-1">
-                Edit details and photos, or hide, mark sold, or remove listings.
+                Edit listings, choose which one is the homepage highlight, hide,
+                mark sold, or delete.
               </p>
             </div>
 
@@ -110,10 +113,34 @@ export default async function AdminDashboard() {
                           Hidden
                         </span>
                       )}
+                      {product.featured && (
+                        <span className="bg-ink text-white px-2 py-0.5 rounded-md text-xs font-bold uppercase tracking-wide">
+                          Homepage highlight
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className="flex flex-wrap gap-2 flex-shrink-0 w-full sm:w-auto">
+                    {product.featured ? (
+                      <form action={clearHomepageFeatured}>
+                        <button
+                          type="submit"
+                          className="min-h-11 px-4 text-sm font-medium bg-ink text-white border border-ink rounded-xl hover:opacity-90 transition-opacity cursor-pointer"
+                        >
+                          Remove highlight
+                        </button>
+                      </form>
+                    ) : (
+                      <form action={setHomepageFeatured.bind(null, product.id)}>
+                        <button
+                          type="submit"
+                          className="min-h-11 px-4 text-sm font-medium bg-canvas border border-line rounded-xl hover:bg-accent-soft/50 transition-colors cursor-pointer"
+                        >
+                          Set as highlight
+                        </button>
+                      </form>
+                    )}
                     <Link
                       href={`/admin/products/${product.id}/edit`}
                       className="min-h-11 px-4 text-sm font-medium bg-accent text-white border border-accent rounded-xl hover:bg-accent-hover transition-colors cursor-pointer inline-flex items-center justify-center"

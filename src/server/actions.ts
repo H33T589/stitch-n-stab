@@ -203,3 +203,26 @@ export async function togglePublished(id: string) {
   revalidatePath("/");
   revalidatePath("/admin");
 }
+
+/** One listing at a time: shows as the large “Highlight” card on the homepage. */
+export async function setHomepageFeatured(id: string) {
+  const exists = await prisma.product.findUnique({ where: { id } });
+  if (!exists) return;
+
+  await prisma.$transaction([
+    prisma.product.updateMany({ data: { featured: false } }),
+    prisma.product.update({
+      where: { id },
+      data: { featured: true },
+    }),
+  ]);
+
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+export async function clearHomepageFeatured() {
+  await prisma.product.updateMany({ data: { featured: false } });
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
